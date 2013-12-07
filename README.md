@@ -2,10 +2,31 @@
 
 Popular movies provides you an accessible API that grabs a list of the popular movies and their IMDB id's. This should help you get a list of movies that were possibly only in theaters and separate it from the less mainstream movies.
 
+### Sample
+
+    {
+        movies: [
+            {
+                title: "Fast & Furious 6",
+                release_date: "2013-05-21",
+                tmdb_id: "82992",
+                imdb_id: "tt1905041",
+                rt_id: "771246668"
+            },
+            {
+                title: "Elysium",
+                release_date: "2013-08-09",
+                tmdb_id: "68724",
+                imdb_id: "tt1535108",
+                rt_id: "771235149"
+            },
+        ]
+    }
+
 ### Install
 
 * Get an API key from [TMDb](https://www.themoviedb.org/account/sluzorz/api-details).
-    
+
     * Rename the file [application/config/tmdb.php.sample](application/config/tmdb.php).
 
             mv application/config/tmdb.php.sample application/config/tmdb.php
