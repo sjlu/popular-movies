@@ -28,7 +28,6 @@ class Migration_Movies extends CI_Migration {
 
     $this->dbforge->add_field($fields);
     $this->dbforge->add_key('tmdb_id', TRUE);
-    $this->dbforge->add_key('title');
     $this->dbforge->create_table('movies');
   }
 
