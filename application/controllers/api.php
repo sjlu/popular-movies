@@ -10,7 +10,7 @@ class Api extends REST_Controller {
       'omdb_model',
       'movies_model'
     ));
-    $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+    $this->load->driver('cache', array('adapter' => 'xcache', 'backup' => 'file'));
   }
 
   function index_get() {
