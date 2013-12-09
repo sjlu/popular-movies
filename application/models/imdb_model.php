@@ -17,7 +17,7 @@ class Imdb_model extends CI_Model {
       try {
         @$html->load_file($url . $id);
       } catch (Exception $e) {
-        return false;
+        $accounting = false;
       }
 
       $budget = false;
@@ -35,7 +35,7 @@ class Imdb_model extends CI_Model {
       }
 
       if (!$budget || !$gross) {
-        return false;
+        $accounting = false;
       }
 
       $accounting = array(
