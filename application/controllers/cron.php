@@ -1,6 +1,5 @@
 <?php
-require(APPPATH . 'libraries/REST_Controller.php');
-class Api extends REST_Controller {
+class Cron extends CI_Controller {
 
   function __construct() {
     parent::__construct();
@@ -8,21 +7,19 @@ class Api extends REST_Controller {
       'tmdb_model',
       'rt_model',
       'omdb_model',
-      'movies_model',
-      'imdb_model'
+      'movies_model'
     ));
     $this->load->driver('cache', array('adapter' => 'file'));
+    $this->load->library('aws');
+    $this->aws->load('s3');
   }
 
-  function index_get() {
-    // Get a raw list of movies for the database
+  function get() {
     if (!$popular_movies = $this->cache->get('movies')) {
-      $popular_movies = $this->tmdb_model->discover();
+      $popular_movies = $this->tmdb_model->discover_movies();
       $this->cache->save('movies', $popular_movies, 86400);
     }
 
-    // Weed out ones that the user defined that they
-    // do not want to see.
     $days_back = $this->get('days_back');
     if ($days_back) {
       $date = date('Ymd', strtotime('-' . $days_back . ' days'));
@@ -33,14 +30,12 @@ class Api extends REST_Controller {
       }
     }
 
-    // See if we have any association in the database.
     $tmdb_ids = array();
     foreach ($popular_movies as $movie) {
       $tmdb_ids[] = $movie['tmdb_id'];
     }
     $stored = $this->movies_model->lookup_movies($tmdb_ids);
 
-    // Associate IDs to each movie.
     $returnable_movies = array();
     foreach ($popular_movies as &$movie) {
       $title = $movie['title'];
@@ -48,44 +43,34 @@ class Api extends REST_Controller {
 
       if (isset($stored[$movie['tmdb_id']])) {
         $movie = array_merge($movie, $stored[$movie['tmdb_id']]);
-        continue;
-      }
-
-      $ids = $this->tmdb_model->get_imdb_id($movie['tmdb_id']);
-      if ($ids) {
-        $movie = array_merge($movie, $ids);
+        $returnable_movies[] = $movie;
         continue;
       }
 
       $ids = $this->rt_model->lookup_movie($title, $year);
       if ($ids) {
         $movie = array_merge($movie, $ids);
-        continue;
+      } else {
+        // alternative lookup
+        $ids = $this->omdb_model->lookup_movie($title, $year);
+        if ($ids) {
+          $movie = array_merge($movie, $ids);
+        }
       }
 
-      $ids = $this->omdb_model->lookup_movie($title, $year);
       if ($ids) {
-        $movie = array_merge($movie, $ids);
-        continue;
-      }
-    }
-
-    $returnable_movies = array();
-    foreach ($popular_movies as $movie) {
-      if (isset($movie['imdb_id'])) {
-        if (!isset($stored[$movie['tmdb_id']])) {
-          $this->movies_model->add_movie($movie);
-        }
-
-        if (!$this->imdb_model->gross_exceeds_budget($movie['imdb_id'])) {
-          continue;
-        }
-
+        $this->movies_model->add_movie($movie);
         $returnable_movies[] = $movie;
       }
     }
 
-    $this->response(array('movies' => $returnable_movies));
+    return $returnable_movies;
+  }
+
+  function upload_to_s3() {
+    $this->aws->s3->create_object('popular-movies', 'movies.json', array(
+      'body' => json_encode($this->get())
+    ));
   }
 
 }

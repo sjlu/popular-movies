@@ -12,7 +12,30 @@ class Movies_model extends CI_Model {
   }
 
   function add_movie($movie) {
-    $this->db->insert('movies', $movie);
+    $project_to_db = array();
+    $fields = array(
+      'title' => array('required' => true),
+      'release_date' => array('required' => true),
+      'tmdb_id' => array('required' => true),
+      'imdb_id' => array('required' => true),
+      'rt_id' => array()
+    );
+    foreach ($fields as $field => $parameters) {
+      if (isset($movie[$field])) {
+        $project_to_db[$field] = $movie[$field];
+      } else {
+        if (isset($parameters['required']) && $parameters['required']) {
+          return false;
+        }
+      }
+    }
+
+    if ($this->lookup_movie($project_to_db['tmdb_id'])) {
+      return false;
+    }
+
+    $this->db->insert('movies', $project_to_db);
+
     return $movie;
   }
 
@@ -34,7 +57,12 @@ class Movies_model extends CI_Model {
     $this->db->where('tmdb_id', $tmdb_id);
 
     $query = $this->db->get('movies');
-    return $query->row_array();
+
+    if ($query->num_rows()) {
+      return $query->row_array();
+    }
+
+    return false;
   }
 
 }
