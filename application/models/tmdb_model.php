@@ -27,13 +27,32 @@ class Tmdb_model extends CI_Model {
     return $movies;
   }
 
+  function get_config() {
+    if (!$config = $this->cache->get('tmdb_config')) {
+      $parameters = array(
+        'api_key' => $this->api_key
+      );
+
+      $data = $this->curl->simple_get($this->api_url . '/configuration', $parameters);
+      $config = json_decode($data, true);
+
+      $this->cache->save('tmdb_config', $config, 86400);
+    }
+
+    return $config;
+  }
+
   function get_imdb_id($id) {
     $parameters = array(
       'api_key' => $this->api_key
     );
 
-    $data = $this->curl->simple_get($this->api_url . '/movie/' . $id);
+    $data = $this->curl->simple_get($this->api_url . '/movie/' . $id, $parameters);
     $data = json_decode($data, true);
+
+    if (!isset($data['results'])) {
+      return false;
+    }
 
     $processed = $data['results'];
 
@@ -68,6 +87,14 @@ class Tmdb_model extends CI_Model {
   function discover() {
     if (!$movies = $this->cache->get('tmdb_movies')) {
       $movies = $this->discover_movies();
+
+      // append the image path
+      $image_path = $this->get_config()['images']['secure_base_url'] . 'w500';
+      foreach ($movies as &$movie) {
+        $movie['poster_path'] = $image_path . $movie['poster_path'];
+        $movie['backdrop_path'] = $image_path . $movie['backdrop_path'];
+      }
+
       $this->cache->save('tmdb_movies', $movies, 86400);
     }
 

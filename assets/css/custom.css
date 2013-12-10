@@ -5,3 +5,12 @@
 body {
    padding-top: 15px;
 }
+
+.poster {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.poster img {
+  border-radius: 5px;
+}

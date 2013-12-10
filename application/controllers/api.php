@@ -16,12 +16,7 @@ class Api extends REST_Controller {
 
   private function _retrieve() {
     // Get a raw list of movies for the database
-    log_message('info', 'Looking up movies on TMDb.');
-    if (!$popular_movies = $this->cache->get('movies')) {
-      log_message('info', 'TMDb movies were not cached, looking up.');
-      $popular_movies = $this->tmdb_model->discover();
-      $this->cache->save('movies', $popular_movies, 86400);
-    }
+    $popular_movies = $this->tmdb_model->discover();
 
     // Weed out anything that hasn't been curated long enough.
     $today = date('Ymd', strtotime('-90 days'));
@@ -162,17 +157,6 @@ class Api extends REST_Controller {
     $removed_movies_temp = array();
     foreach ($removed_movies as $movie) {
       $add_back = false;
-      // if ($movie['tmdb']['vote_count'] > $stats['average_number_of_votes']) {
-      //   $add_back = true;
-      // }
-
-      // if ($movie['imdb']['gross'] > $stats['average_money_earned']) {
-      //   $add_back = true;
-      // }
-
-      // if ($movie['tmdb']['vote_average'] > $stats['average_rating'] && $movie['tmdb']['popularity']  > $stats['average_popularity']) {
-      //   $add_back = true;
-      // }
 
       if ($add_back) {
         $filtered_movies[] = $movie;
