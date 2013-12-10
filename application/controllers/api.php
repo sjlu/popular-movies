@@ -60,19 +60,37 @@ class Api extends REST_Controller {
   private function _second_pass($movies) {
     // With the stuff we've added, how many ratings have
     // they gotten?
-    $stats = array(
-      'average_number_of_votes' => 0,
-      'average_money_spent' => 0,
-      'average_money_earned' => 0,
-      'average_popularity' => 0,
-      'average_rating' => 0,
+    $association = array(
+      'imdb' => array(
+        'rating_count' => 'average_imdb_rating_count',
+        'rating' => 'average_imdb_rating',
+        'budget' => 'average_money_spent',
+        'gross' => 'average_money_earned',
+      ),
+      'tmdb' => array(
+        'vote_average' => 'average_tmdb_rating',
+        'vote_count' => 'average_tmdb_rating_count'
+      )
     );
+    $stats = array();
     foreach ($movies['passed'] as $movie) {
-      $stats['average_number_of_votes'] += $movie['imdb']['rating_count'];
-      $stats['average_money_spent'] += $movie['imdb']['budget'];
-      $stats['average_money_earned'] += $movie['imdb']['gross'];
-      $stats['average_popularity'] += $movie['tmdb']['popularity'];
-      $stats['average_rating'] += $movie['imdb']['rating'];
+      foreach ($association as $key => $value) {
+        if (is_array($value)) {
+          foreach ($value as $inner_key => $inner_value) {
+            if (!isset($stats[$inner_value])) {
+              $stats[$inner_value] = 0;
+            }
+
+            $stats[$inner_value] += $movie[$key][$inner_key];
+          }
+        } else {
+          if (!isset($value)) {
+            $stats[$value] = 0;
+          }
+
+          $stats[$value] += $movie[$key];
+        }
+      }
     }
     $number_of_movies = count($movies['passed']);
     foreach ($stats as &$stat) {
@@ -83,14 +101,28 @@ class Api extends REST_Controller {
     $removed = array();
     $passed = $movies['passed'];
     foreach ($movies['removed'] as $movie) {
-      $add_back = false;
+      $points = 0;
 
       // Will place in a series of auto-generated rules.
       // If it passes a certain amount of rules, it'll be
       // added back into the list.
+      foreach ($association as $key => $value) {
+        if (is_array($value)) {
+          foreach ($value as $inner_key => $inner_value) {
+            if ($movie[$key][$inner_key] > $stats[$inner_value]) {
+              $points++;
+            }
+          }
+        } else {
+          if ($movie[$key] > $stats[$value]) {
+            $points++;
+          }
+        }
+      }
 
-      if ($add_back) {
+      if ($points >= ceil(count($stats) * 0.5)) {
         $passed[] = $movie;
+        log_message('info', 'Added back movie with ' . $points . ' points. (' . $movie['title'] . ')');
       } else {
         $removed[] = $movie;
       }
