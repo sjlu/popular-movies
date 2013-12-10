@@ -15,7 +15,7 @@
         You can learn more about the project by visiting it on <a href="https://github.com/sjlu/popular-movies" target="_blank">Github</a>.
       </p>
    </div>
-   <div id="posters" class="row"></div>
+   <div id="posters"></div>
 </div>
 <script id="poster-template" type="text/x-handlebars-template">
   <div class="poster col-xs-12 col-sm-4">

@@ -158,6 +158,10 @@ class Api extends REST_Controller {
     foreach ($removed_movies as $movie) {
       $add_back = false;
 
+      // Will place in a series of auto-generated rules.
+      // If it passes a certain amount of rules, it'll be
+      // added back into the list.
+
       if ($add_back) {
         $filtered_movies[] = $movie;
       } else {

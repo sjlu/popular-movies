@@ -1,10 +1,22 @@
 $(document).ready(function() {
-	var template = Handlebars.compile($('#poster-template').html());
+	var posterTemplate = Handlebars.compile($('#poster-template').html());
 	var movies = $.get('index.php/api/detail', function (data) {
-	  _.each(data.movies, function(movie) {
-			$('#posters').append(template({
+    var currentRow, i;
+    for (i = 0; i < data.movies.length; i++) {
+      var movie = data.movies[i];
+
+      if (!(i % 3)) {
+        $('#posters').append(currentRow);
+        currentRow = $('<div class="row">');
+      }
+
+			currentRow.append(posterTemplate({
 				url: movie.tmdb.poster_path
 			}));
-	  });
+	  }
+
+    if (i % 3) {
+      $('#posters').append(currentRow);
+    }
 	});
 });
