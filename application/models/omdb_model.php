@@ -9,7 +9,7 @@ class Omdb_model extends CI_Model {
     $this->load->library('curl');
   }
 
-  function lookup_movie($title, $year) {
+  private function _lookup_movie($title, $year) {
     $parameters = array(
       's' => $title
     );
@@ -42,6 +42,16 @@ class Omdb_model extends CI_Model {
     }
 
     return false;
+  }
+
+
+  function lookup_movie($title, $year) {
+    $id = md5($title . $year);
+    if ($movie = $this->cache->get('omdb_id_' . $id)) {
+      $movie = $this->_lookup_movie($title, $year);
+      $this->cache->save('omdb_id_' . $id, $movie, 86400);
+    }
+    return $movie;
   }
 
 }

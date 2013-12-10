@@ -2,8 +2,8 @@ $(document).ready(function() {
 	var posterTemplate = Handlebars.compile($('#poster-template').html());
 	var movies = $.get('index.php/api/detail', function (data) {
     var currentRow, i;
-    for (i = 0; i < data.movies.length; i++) {
-      var movie = data.movies[i];
+    for (i = 0; i < data.passed.length; i++) {
+      var movie = data.passed[i];
 
       if (!(i % 3)) {
         $('#posters').append(currentRow);

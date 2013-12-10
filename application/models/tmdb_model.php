@@ -42,7 +42,7 @@ class Tmdb_model extends CI_Model {
     return $config;
   }
 
-  function get_imdb_id($id) {
+  private function _get_imdb_id($id) {
     $parameters = array(
       'api_key' => $this->api_key
     );
@@ -63,7 +63,15 @@ class Tmdb_model extends CI_Model {
     return false;
   }
 
-  private function discover_movies($page = 1) {
+  function get_imdb_id($id) {
+    if ($movie = $this->cache->get('tmdb_id_' . $id)) {
+      $movie = $this->_get_imdb_id($id);
+      $this->cache->save('tmdb_id_' . $id, $movie, 86400);
+    }
+    return $movie;
+  }
+
+  private function _discover_movies($page = 1) {
     $parameters = array(
       'api_key' => $this->api_key,
       'sort_by' => 'popularity.desc',
@@ -84,9 +92,9 @@ class Tmdb_model extends CI_Model {
     return $processed;
   }
 
-  function discover() {
+  function discover_movies() {
     if (!$movies = $this->cache->get('tmdb_movies')) {
-      $movies = $this->discover_movies();
+      $movies = $this->_discover_movies();
 
       // append the image path
       $image_path = $this->get_config()['images']['secure_base_url'] . 'w500';
