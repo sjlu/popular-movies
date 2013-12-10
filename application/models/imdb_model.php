@@ -8,16 +8,16 @@ class Imdb_model extends CI_Model {
     $this->load->driver('cache', array('adapter' => 'file'));
   }
 
-  function get_accounting($id) {
+  function lookup($id) {
     $url = 'http://www.imdb.com/title/';
 
-    if (!$accounting = $this->cache->get('imdb_accounting_' . $id)) {
+    if (!$info = $this->cache->get('imdb_' . $id)) {
       $html = $this->dom->create_instance();
 
       try {
         @$html->load_file($url . $id);
       } catch (Exception $e) {
-        $accounting = false;
+        $info = false;
       }
 
       $budget = false;
@@ -34,24 +34,29 @@ class Imdb_model extends CI_Model {
         }
       }
 
-      if (!$budget || !$gross) {
-        $accounting = false;
-      }
+      $rating_count = $html->find('span[itemprop=ratingCount]', 0)->plaintext;
+      $rating_count = filter_var($rating_count, FILTER_SANITIZE_NUMBER_INT);
 
-      $accounting = array(
+      $rating = $html->find('div[class=star-box-giga-star]', 0)->plaintext;
+      $rating = filter_var($rating, FILTER_SANITIZE_NUMBER_INT);
+
+      $info = array(
         'budget' => $budget,
-        'gross' => $gross
+        'gross' => $gross,
+        'revenue' => $gross - $budget,
+        'rating_count' => $rating_count,
+        'rating' => $rating/10
       );
 
-      $this->cache->save('imdb_accounting_' . $id, $accounting, 604800); // 1 week
+      $this->cache->save('imdb_' . $id, $info, 604800); // 1 week
     }
 
-    return $accounting;
+    return $info;
   }
 
   function gross_exceeds_budget($id) {
-    $accounting = $this->get_accounting($id);
-    if ($accounting['gross'] > $accounting['budget']) {
+    $info = $this->lookup($id);
+    if ($info['gross'] > $info['budget']) {
       return true;
     }
     return false;

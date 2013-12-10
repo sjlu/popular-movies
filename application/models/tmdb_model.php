@@ -19,7 +19,8 @@ class Tmdb_model extends CI_Model {
       $movies[] = array(
         'title' => $movie['title'],
         'release_date' => $movie['release_date'],
-        'tmdb_id' => $movie['id']
+        'tmdb_id' => $movie['id'],
+        'tmdb' => $movie
       );
     }
 
