@@ -9,7 +9,7 @@
         and <a href="http://trakt.tv/" target="_blank">Trakt</a>.
       </p>
       <p>
-        To view a simple set of data, go to <a href="<?php echo site_url('/api'); ?>" target="_blank">/api</a>
+        To view a simple set of data, go to <a href="<?php echo site_url('/api'); ?>" target="_blank">/api</a> or go to the cache on <a href="https://s3.amazonaws.com/popular-movies/movies.json">Amazon S3</a>.
         <br />For a detailed set, go to <a href="<?php echo site_url('/api/detail') ?>" target="_blank">/api/detail</a>.
       </p>
       <p>
