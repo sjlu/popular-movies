@@ -4,8 +4,9 @@
       <p>
         This generates a list of movies that deem to be popular based on set or rules and algorithms
         from sources like <a href="http://www.themoviedb.org/" target="_blank">The Movie Database</a>,
-        <a href="http://www.imdb.com/" target="_blank">IMDb</a> and
-        <a href="http://www.rottentomatoes.com/" target="_blank">Rotten Tomatoes</a>.
+        <a href="http://www.imdb.com/" target="_blank">IMDb</a>,
+        <a href="http://www.rottentomatoes.com/" target="_blank">Rotten Tomatoes</a>
+        and <a href="http://trakt.tv/" target="_blank">Trakt</a>
       </p>
       <p>
         To view a simple set of data, go to <a href="<?php echo site_url('/api'); ?>" target="_blank">/api</a>

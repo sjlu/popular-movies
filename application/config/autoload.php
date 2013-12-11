@@ -80,7 +80,7 @@ $autoload['helper'] = array('url');
 |
 */
 
-$autoload['config'] = array('tmdb', 'rt');
+$autoload['config'] = array('tmdb', 'rt', 'trakt');
 
 
 /*

@@ -9,7 +9,8 @@ class Api extends REST_Controller {
       'rt_model',
       'omdb_model',
       'movies_model',
-      'imdb_model'
+      'imdb_model',
+      'trakt_model'
     ));
     $this->load->driver('cache', array('adapter' => 'file'));
   }
@@ -74,6 +75,11 @@ class Api extends REST_Controller {
       'rt' => array(
         'critics_score' => 'average_imdb_critics_score',
         'audience_score' => 'average_imdb_audience_score'
+      ),
+      'trakt' => array(
+        'rating' => 'average_trakt_score',
+        'rating_count' => 'average_trakt_rating_count',
+        'plays' => 'average_trakt_plays'
       )
     );
     $stats = array();
@@ -215,6 +221,9 @@ class Api extends REST_Controller {
     foreach ($movies as &$movie) {
       log_message('info', 'Looking up movie information on IMDb. (' . $movie['title'] . ')');
       $movie['imdb'] = $this->imdb_model->lookup($movie['imdb_id']);
+
+      log_message('info', 'Looking up data on Trakt. (' . $movie['title'] . ')');
+      $movie['trakt'] = $this->trakt_model->lookup($movie['imdb_id']);
 
       if (isset($movie['rt_id'])) {
         log_message('info', 'Looking up movie information on RT. (' . $movie['title'] . ')');
