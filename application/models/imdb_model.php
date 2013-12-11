@@ -11,13 +11,13 @@ class Imdb_model extends CI_Model {
   function lookup($id) {
     $url = 'http://www.imdb.com/title/';
 
-    if (!$info = $this->cache->get('imdb_' . $id)) {
+    if (($info = $this->cache->get('imdb_' . $id)) === false) {
       $html = $this->dom->create_instance();
 
       try {
         @$html->load_file($url . $id);
       } catch (Exception $e) {
-        $info = false;
+        $info = null;
       }
 
       $budget = false;

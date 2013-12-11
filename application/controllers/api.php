@@ -69,7 +69,11 @@ class Api extends REST_Controller {
       ),
       'tmdb' => array(
         'vote_average' => 'average_tmdb_rating',
-        'vote_count' => 'average_tmdb_rating_count'
+        'vote_count' => 'average_tmdb_rating_count',
+      ),
+      'rt' => array(
+        'critics_score' => 'average_imdb_critics_score',
+        'audience_score' => 'average_imdb_audience_score'
       )
     );
     $stats = array();
@@ -120,7 +124,7 @@ class Api extends REST_Controller {
         }
       }
 
-      if ($points >= ceil(count($stats) * 0.5)) {
+      if ($points > ceil(count($stats) * 0.5)) {
         $passed[] = $movie;
         log_message('info', 'Added back movie with ' . $points . ' points. (' . $movie['title'] . ')');
       } else {
@@ -142,7 +146,7 @@ class Api extends REST_Controller {
     $today = date('Ymd', strtotime('-90 days'));
     $past = date('Ymd', strtotime('-1 year'));
     foreach ($popular_movies as $key => $movie) {
-      $numeric_release_date = str_replace("-", "", $movie['release_date']);
+      $numeric_release_date = str_replace("-", "", $movie['tmdb']['release_date']);
       if ($numeric_release_date > $today || $numeric_release_date < $past) {
         unset($popular_movies[$key]);
       }
@@ -160,31 +164,29 @@ class Api extends REST_Controller {
     $movies = array();
     foreach ($popular_movies as &$movie) {
       $title = $movie['title'];
-      $year = substr($movie['release_date'], 0, 4);
+      $year = substr($movie['tmdb']['release_date'], 0, 4);
 
       if (isset($stored[$movie['tmdb_id']])) {
         $movie = array_merge($movie, $stored[$movie['tmdb_id']]);
         continue;
       }
 
-      log_message('info', 'ID not found in database, looking up. (' . $movie['tmdb_id'] . ')');
-
+      log_message('info', 'IDs not found in database, looking up. (' . $movie['title'] . ')');
       $ids = $this->tmdb_model->get_imdb_id($movie['tmdb_id']);
       if ($ids) {
-        $movie = array_merge($movie, $ids);
-        continue;
+        $movie = array_merge($ids, $movie);
       }
 
-      $ids = $this->rt_model->lookup_movie($title, $year);
+      $ids = $this->rt_model->search_movie($title, $year);
       if ($ids) {
-        $movie = array_merge($movie, $ids);
-        continue;
+        $movie = array_merge($ids, $movie);
       }
 
-      $ids = $this->omdb_model->lookup_movie($title, $year);
-      if ($ids) {
-        $movie = array_merge($movie, $ids);
-        continue;
+      if (!isset($movie['imdb_id'])) {
+        $ids = $this->omdb_model->search_movie($title, $year);
+        if ($ids) {
+          $movie = array_merge($ids, $movie);
+        }
       }
     }
 
@@ -193,7 +195,12 @@ class Api extends REST_Controller {
     $movies = array();
     foreach ($popular_movies as $movie) {
       if (!isset($movie['imdb_id'])) {
-        log_message('info', 'IMDb ID not found. (' . $movie['tmdb_id'] . ')');
+        log_message('info', 'IMDb ID not found. (' . $movie['title'] . ')');
+        continue;
+      }
+
+      if (!isset($movie['rt_id'])) {
+        log_message('info', 'RT ID not found. ('. $movie['title'] . ')');
         continue;
       }
 
@@ -206,8 +213,13 @@ class Api extends REST_Controller {
 
     // Lookup information from IMDb.
     foreach ($movies as &$movie) {
-      log_message('info', 'Looking up movie information on IMDb. (' . $movie['imdb_id'] . ')');
+      log_message('info', 'Looking up movie information on IMDb. (' . $movie['title'] . ')');
       $movie['imdb'] = $this->imdb_model->lookup($movie['imdb_id']);
+
+      if (isset($movie['rt_id'])) {
+        log_message('info', 'Looking up movie information on RT. (' . $movie['title'] . ')');
+        $movie['rt'] = $this->rt_model->lookup($movie['rt_id']);
+      }
     }
 
     $movies = $this->_first_pass($movies);

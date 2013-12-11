@@ -7,10 +7,6 @@ class Migration_Movies extends CI_Migration {
       'title' => array(
         'type' => 'TEXT'
       ),
-      'release_date' => array(
-        'type' => 'DATE',
-        'null' => true
-      ),
       'imdb_id' => array(
         'type' => 'VARCHAR',
         'constraint' => 12
@@ -21,8 +17,7 @@ class Migration_Movies extends CI_Migration {
       ),
       'rt_id' => array(
         'type' => 'INT',
-        'constraint' => 12,
-        'null' => true
+        'constraint' => 12
       )
     );
 

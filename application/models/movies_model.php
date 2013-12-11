@@ -15,10 +15,9 @@ class Movies_model extends CI_Model {
     $project_to_db = array();
     $fields = array(
       'title' => array('required' => true),
-      'release_date' => array('required' => true),
       'tmdb_id' => array('required' => true),
       'imdb_id' => array('required' => true),
-      'rt_id' => array()
+      'rt_id' => array('required' => true)
     );
     foreach ($fields as $field => $parameters) {
       if (isset($movie[$field])) {

@@ -9,7 +9,9 @@ class Omdb_model extends CI_Model {
     $this->load->library('curl');
   }
 
-  private function _lookup_movie($title, $year) {
+  private function _search_movie($title, $year) {
+    $title = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $title);
+
     $parameters = array(
       's' => $title
     );
@@ -18,7 +20,7 @@ class Omdb_model extends CI_Model {
     $data = json_decode($data, true);
 
     if (!isset($data['Search'])) {
-      return false;
+      return null;
     }
 
     $results = array();
@@ -41,14 +43,14 @@ class Omdb_model extends CI_Model {
       return $result;
     }
 
-    return false;
+    return null;
   }
 
 
-  function lookup_movie($title, $year) {
+  function search_movie($title, $year) {
     $id = md5($title . $year);
-    if ($movie = $this->cache->get('omdb_id_' . $id)) {
-      $movie = $this->_lookup_movie($title, $year);
+    if (($movie = $this->cache->get('omdb_id_' . $id)) === false) {
+      $movie = $this->_search_movie($title, $year);
       $this->cache->save('omdb_id_' . $id, $movie, 86400);
     }
     return $movie;

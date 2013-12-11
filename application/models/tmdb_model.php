@@ -12,15 +12,20 @@ class Tmdb_model extends CI_Model {
     $this->api_key = $this->config->item('tmdb_api_key');
   }
 
-  private function process_movies($data) {
+  private function _sanatize($data) {
     $movies = array();
 
     foreach ($data as $movie) {
       $movies[] = array(
         'title' => $movie['title'],
-        'release_date' => $movie['release_date'],
         'tmdb_id' => $movie['id'],
-        'tmdb' => $movie
+        'tmdb' => array(
+          'release_date' => $movie['release_date'],
+          'poster_path' => $movie['poster_path'],
+          'popularity' => $movie['popularity'],
+          'vote_average' => $movie['vote_average'],
+          'vote_count' => $movie['vote_count']
+        )
       );
     }
 
@@ -50,21 +55,19 @@ class Tmdb_model extends CI_Model {
     $data = $this->curl->simple_get($this->api_url . '/movie/' . $id, $parameters);
     $data = json_decode($data, true);
 
-    if (!isset($data['results'])) {
-      return false;
+    if (!isset($data['imdb_id'])) {
+      return null;
     }
 
-    $processed = $data['results'];
-
-    if (isset($processed['imdb_id'])) {
-      return array('imdb_id' => $processed['imdb_id']);
+    if (isset($data['imdb_id'])) {
+      return array('imdb_id' => $data['imdb_id']);
     }
 
-    return false;
+    return null;
   }
 
   function get_imdb_id($id) {
-    if ($movie = $this->cache->get('tmdb_id_' . $id)) {
+    if (($movie = $this->cache->get('tmdb_id_' . $id)) === false) {
       $movie = $this->_get_imdb_id($id);
       $this->cache->save('tmdb_id_' . $id, $movie, 86400);
     }
@@ -86,7 +89,7 @@ class Tmdb_model extends CI_Model {
 
     $processed = $data['results'];
     if ($page < $data['total_pages']) {
-      $processed = array_merge($processed, $this->discover_movies($page + 1));
+      $processed = array_merge($processed, $this->_discover_movies($page + 1));
     }
 
     return $processed;
@@ -103,10 +106,11 @@ class Tmdb_model extends CI_Model {
         $movie['backdrop_path'] = $image_path . $movie['backdrop_path'];
       }
 
+      $movies = $this->_sanatize($movies);
       $this->cache->save('tmdb_movies', $movies, 86400);
     }
 
-    return $this->process_movies($movies);
+    return $movies;
   }
 
 }
