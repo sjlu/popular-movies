@@ -1,0 +1,22 @@
+{
+  "name": "popular-movies",
+  "version": "0.1.0",
+  "description": "A library to help determine what movies to watch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sjlu/popular-movies.git"
+  },
+  "keywords": [
+    "movies"
+  ],
+  "author": "Steven Lu <slu@me.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sjlu/popular-movies/issues"
+  },
+  "homepage": "https://github.com/sjlu/popular-movies"
+}
