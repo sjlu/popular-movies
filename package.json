@@ -4,8 +4,7 @@
   "description": "A library to help determine what movies to watch",
   "main": "index.js",
   "scripts": {
-    "test": "./bin/test",
-    "start": "./bin/run"
+    "test": "./bin/test"
   },
   "engines": {
     "node": "0.10.x",
