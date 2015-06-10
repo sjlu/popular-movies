@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An auto-generated list of popular movies.">
+  <meta name="keywords" content="popular, movies, list">
+  <meta name="author" content="Steven Lu">
+
+  <title>Popular Movies</title>
+
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+       padding-top: 15px;
+    }
+
+    .poster {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .poster img {
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="jumbotron">
+    <h2>Popular Movies</h2>
+    <p>
+      This generates a list of movies that deem to be popular based on set or rules and algorithms
+      from sources like <a href="http://www.themoviedb.org/" target="_blank">The Movie Database</a>,
+      <a href="http://www.imdb.com/" target="_blank">IMDb</a>,
+      <a href="http://www.rottentomatoes.com/" target="_blank">Rotten Tomatoes</a>
+      and <a href="http://trakt.tv/" target="_blank">Trakt</a>.
+    </p>
+    <p>
+      To view a simple set of data, go to <a href="http://movies.stevenlu.com/index.php/api" target="_blank">/api</a> or go to the cache on <a href="https://s3.amazonaws.com/popular-movies/movies.json">Amazon S3</a>.
+      <br />For a detailed set, go to <a href="http://movies.stevenlu.com/index.php/api/detail" target="_blank">/api/detail</a>.
+    </p>
+    <p>
+      You can learn more about the project by visiting it on <a href="https://github.com/sjlu/popular-movies" target="_blank">Github</a>.
+    </p>
+  </div>
+  <div id="posters"></div>
+</div>
+<script id="poster-template" type="text/x-handlebars-template">
+  <div class="poster col-xs-12 col-sm-4">
+    <img src="{{url}}" class="img-responsive" />
+  </div>
+</script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var posterTemplate = Handlebars.compile($('#poster-template').html());
+      var movies = $.get('https://s3.amazonaws.com/popular-movies/movies.json', function (data) {
+        var currentRow, i;
+        for (i = 0; i < data.passed.length; i++) {
+          var movie = data.passed[i];
+
+          if (!(i % 3)) {
+            $('#posters').append(currentRow);
+            currentRow = $('<div class="row">');
+          }
+
+          currentRow.append(posterTemplate({
+            url: movie.tmdb.poster_path
+          }));
+        }
+
+        if (i % 3) {
+          $('#posters').append(currentRow);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
