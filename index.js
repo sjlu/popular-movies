@@ -6,6 +6,7 @@ var _ = require('lodash');
 var inspect = require('./lib/inspect')
 var redis = require('./lib/redis');
 var Stats = require('fast-stats').Stats;
+var trakt = require('./lib/trakt');
 
 var getImdbId = function(tmdb_id) {
 
@@ -71,14 +72,16 @@ var filterByPopularity = function(movies) {
 
 }
 
-var filterByAverageVoteCount = function(movies) {
+var filterByGeometricAverage = function(field) {
 
-  var stats = new Stats().push(_.pluck(movies, "vote_count"))
-  var mean = stats.gmean()
+  return function(movies) {
+    var stats = new Stats().push(_.pluck(movies, field))
+    var mean = stats.gmean()
 
-  return _.filter(movies, function(movie) {
-    return movie.vote_count >= mean
-  })
+    return _.filter(movies, function(movie) {
+      return movie[field] >= mean
+    })
+  }
 
 }
 
@@ -98,14 +101,41 @@ var associateImdbIds = function(movies) {
 
 }
 
+var getTraktData = function(movies) {
+
+  return Promise.resolve(movies)
+    .map(function(movie) {
+
+      return Promise.resolve(trakt.getMovie(movie.imdb_id))
+        .then(function(traktMovie) {
+          return _.extend(movie, traktMovie)
+        })
+
+
+    }, {concurrency: 1})
+
+}
+
+var sanatizeForResponse = function(movies) {
+
+  return Promise.resolve(movies)
+    .map(function(movie) {
+      return _.pick(movie, ["title", "imdb_id", "poster_url"])
+    })
+
+}
+
 module.exports = function(cb) {
 
   var q = Promise.resolve(tmdb.getMovies())
     .bind({})
     .then(filterByReleaseDate)
     .then(filterByPopularity)
-    .then(filterByAverageVoteCount)
+    .then(filterByGeometricAverage('vote_count'))
     .then(associateImdbIds)
+    .then(getTraktData)
+    .then(filterByGeometricAverage('plays'))
+    .then(sanatizeForResponse)
 
   if (cb) {
     q.nodeify(cb)
