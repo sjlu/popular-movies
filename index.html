@@ -60,7 +60,7 @@
       var movies = $.get('https://s3.amazonaws.com/popular-movies/movies.json', function(data) {
         var currentRow, i;
         for (i = 0; i < data.length; i++) {
-          var movie = data.passed[i];
+          var movie = data[i];
 
           if (!(i % 3)) {
             $('#posters').append(currentRow);
