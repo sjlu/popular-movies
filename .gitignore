@@ -1,0 +1,7 @@
+node_modules
+.env
+bower_components
+public/build
+*.log
+.idea
+.DS_Store

@@ -4,7 +4,7 @@
   "description": "A library to help determine what movies to watch",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./bin/test"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,19 @@
   "bugs": {
     "url": "https://github.com/sjlu/popular-movies/issues"
   },
-  "homepage": "https://github.com/sjlu/popular-movies"
+  "homepage": "https://github.com/sjlu/popular-movies",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "URIjs": "^1.15.1",
+    "bluebird": "^2.9.27",
+    "dotenv": "^1.1.0",
+    "eyes": "^0.1.8",
+    "lodash": "^3.9.3",
+    "moment": "^2.10.3",
+    "redis": "^0.12.1",
+    "request": "^2.57.0"
+  }
 }
