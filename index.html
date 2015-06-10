@@ -57,9 +57,9 @@
   <script type="text/javascript">
     $(document).ready(function() {
       var posterTemplate = Handlebars.compile($('#poster-template').html());
-      var movies = $.get('https://s3.amazonaws.com/popular-movies/movies.json', function (data) {
+      var movies = $.get('https://s3.amazonaws.com/popular-movies/movies.json', function(data) {
         var currentRow, i;
-        for (i = 0; i < data.passed.length; i++) {
+        for (i = 0; i < data.length; i++) {
           var movie = data.passed[i];
 
           if (!(i % 3)) {
@@ -68,7 +68,7 @@
           }
 
           currentRow.append(posterTemplate({
-            url: movie.tmdb.poster_path
+            url: movie.poster_path
           }));
         }
 
