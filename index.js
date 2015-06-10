@@ -5,6 +5,7 @@ var moment = require('moment');
 var _ = require('lodash');
 var inspect = require('./lib/inspect')
 var redis = require('./lib/redis');
+var Stats = require('fast-stats').Stats;
 
 var getImdbId = function(tmdb_id) {
 
@@ -46,8 +47,8 @@ var filterByReleaseDate = function(movies) {
   return Promise.resolve(movies)
     .then(function(movies) {
       // filter down these movies a little bit
-      var tooOld = moment().subtract(1, 'year').valueOf()
-      var tooNew = moment().subtract(90, 'days').valueOf()
+      var tooOld = moment().subtract(2, 'year').valueOf()
+      var tooNew = moment().subtract(30, 'days').valueOf()
 
       return _.filter(movies, function(movie) {
         var releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
@@ -70,6 +71,17 @@ var filterByPopularity = function(movies) {
 
 }
 
+var filterByAverageVoteCount = function(movies) {
+
+  var stats = new Stats().push(_.pluck(movies, "vote_count"))
+  var mean = stats.gmean()
+
+  return _.filter(movies, function(movie) {
+    return movie.vote_count >= mean
+  })
+
+}
+
 var associateImdbIds = function(movies) {
 
   return Promise.resolve(movies)
@@ -86,12 +98,13 @@ var associateImdbIds = function(movies) {
 
 }
 
-module.exports.getMovies = function(cb) {
+module.exports = function(cb) {
 
   var q = Promise.resolve(tmdb.getMovies())
     .bind({})
     .then(filterByReleaseDate)
     .then(filterByPopularity)
+    .then(filterByAverageVoteCount)
     .then(associateImdbIds)
 
   if (cb) {

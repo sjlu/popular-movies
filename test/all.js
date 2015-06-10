@@ -7,7 +7,7 @@ describe('all', function() {
 
   it('should get me a list of movies', function() {
 
-    return Promise.resolve(index.getMovies())
+    return Promise.resolve(index())
       .then(function(movies) {
         inspect(movies)
       })
