@@ -4,7 +4,8 @@
   "description": "A library to help determine what movies to watch",
   "main": "index.js",
   "scripts": {
-    "test": "./bin/test"
+    "test": "./bin/test",
+    "run": "./bin/run"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,9 @@
     "lodash": "^3.9.3",
     "moment": "^2.10.3",
     "redis": "^0.12.1",
-    "request": "^2.57.0"
+    "request": "^2.57.0",
+    "s3": "^4.4.0",
+    "temp-write": "^1.1.1",
+    "winston": "^1.0.0"
   }
 }
