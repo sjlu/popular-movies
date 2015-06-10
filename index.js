@@ -41,50 +41,58 @@ var getImdbId = function(tmdb_id) {
 
 }
 
-module.exports.getMovies = function(cb) {
+var filterByReleaseDate = function(movies) {
 
-  var q = Promise.resolve()
-    .bind({})
+  return Promise.resolve(movies)
+    .then(function(movies) {
+      // filter down these movies a little bit
+      var tooOld = moment().subtract(1, 'year').valueOf()
+      var tooNew = moment().subtract(90, 'days').valueOf()
 
-  q = q.then(function() {
-    return tmdb.getMovies()
-  })
-  .then(function(movies) {
-    // filter down these movies a little bit
-    var tooOld = moment().subtract(1, 'year').valueOf()
-    var tooNew = moment().subtract(90, 'days').valueOf()
-
-    return _.filter(movies, function(movie) {
-      var releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
-      return releaseDate >= tooOld && releaseDate <= tooNew;
-    })
-  })
-  .then(function(movies) {
-
-    // filter down anything that's Waaaay to unpopular
-    return _.filter(movies, function(movie) {
-      return movie.popularity >= 2.5;
+      return _.filter(movies, function(movie) {
+        var releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
+        return releaseDate >= tooOld && releaseDate <= tooNew;
+      })
     })
 
-  })
-  .map(function(movie) {
+}
 
-    // grab and obtain only the necessary information
-    var details =  _.pick(movie, ["title", "release_date", "popularity", "vote_average", "id", "vote_count", "poster_path"])
-    details.poster_url = config.TMDB_POSTER_URL + details.poster_path;
-    return details
+var filterByPopularity = function(movies) {
 
-  })
-  .map(function(movie) {
-
-    // we then need to map an imdb_id to each and every movie
-    return getImdbId(movie.id)
-      .then(function(imdb_id) {
-        movie.imdb_id = imdb_id;
-        return movie
+  return Promise.resolve(movies)
+    .then(function(movies) {
+      // filter down anything that's Waaaay to unpopular
+      return _.filter(movies, function(movie) {
+        return movie.popularity >= 2.5;
       })
 
-  }, {concurrency: 1})
+    })
+
+}
+
+var associateImdbIds = function(movies) {
+
+  return Promise.resolve(movies)
+    .map(function(movie) {
+
+      // we then need to map an imdb_id to each and every movie
+      return getImdbId(movie.id)
+        .then(function(imdb_id) {
+          movie.imdb_id = imdb_id;
+          return movie
+        })
+
+    }, {concurrency: 1})
+
+}
+
+module.exports.getMovies = function(cb) {
+
+  var q = Promise.resolve(tmdb.getMovies())
+    .bind({})
+    .then(filterByReleaseDate)
+    .then(filterByPopularity)
+    .then(associateImdbIds)
 
   if (cb) {
     q.nodeify(cb)
