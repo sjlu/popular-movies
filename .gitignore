@@ -1,9 +1,0 @@
-.DS_Store
-.swp
-application/cache
-application/logs
-
-application/config/rt.php
-application/config/tmdb.php
-application/config/database.php
-application/config/trakt.php
