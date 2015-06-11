@@ -7,6 +7,7 @@ var inspect = require('./lib/inspect')
 var redis = require('./lib/redis');
 var Stats = require('fast-stats').Stats;
 var trakt = require('./lib/trakt');
+var winston = require('./lib/winston');
 
 var getImdbId = function(tmdb_id) {
 
@@ -79,6 +80,14 @@ var filterByGeometricAverage = function(field) {
     var mean = stats.gmean()
 
     return _.filter(movies, function(movie) {
+      if (movie[field] < mean) {
+        winston.warn(field, {
+          title: movie.title,
+          mean: mean,
+          value: movie[field]
+        })
+      }
+
       return movie[field] >= mean
     })
   }
@@ -134,7 +143,7 @@ module.exports = function(cb) {
     .then(filterByGeometricAverage('vote_count'))
     .then(associateImdbIds)
     .then(getTraktData)
-    .then(filterByGeometricAverage('plays'))
+    // .then(filterByGeometricAverage('plays'))
     .then(sanatizeForResponse)
 
   if (cb) {
