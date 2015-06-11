@@ -73,6 +73,27 @@ var filterByPopularity = function(movies) {
 
 }
 
+var timeWeightField = function(field) {
+
+  var halfYearAgo = moment().subtract(6, 'months').valueOf()
+
+  return function(movies) {
+    // movies that are less than half a year old
+    // get their values multiplied by x2?
+    return _.map(movies, function(movie) {
+      var value = movie[field]
+      if (moment(movie.release_date, 'YYYY-MM-DD').valueOf() > halfYearAgo) {
+        value *= 1.5
+      }
+      movie["weighted_" + field] = value;
+      console.log(movie)
+      return movie
+    })
+
+  }
+
+}
+
 var filterByGeometricAverage = function(field) {
 
   return function(movies) {
@@ -125,6 +146,14 @@ var getTraktData = function(movies) {
 
 }
 
+var uniqueMovies = function(movies) {
+
+  return _.uniq(movies, function(m) {
+    return m.imdb_id;
+  })
+
+}
+
 var sanatizeForResponse = function(movies) {
 
   return Promise.resolve(movies)
@@ -140,10 +169,12 @@ module.exports = function(cb) {
     .bind({})
     .then(filterByReleaseDate)
     .then(filterByPopularity)
-    .then(filterByGeometricAverage('vote_count'))
+    .then(timeWeightField('vote_count'))
+    .then(filterByGeometricAverage('weighted_vote_count'))
     .then(associateImdbIds)
     .then(getTraktData)
     // .then(filterByGeometricAverage('plays'))
+    .then(uniqueMovies)
     .then(sanatizeForResponse)
 
   if (cb) {
