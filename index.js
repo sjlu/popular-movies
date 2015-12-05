@@ -8,6 +8,7 @@ var redis = require('./lib/redis');
 var Stats = require('fast-stats').Stats;
 var trakt = require('./lib/trakt');
 var winston = require('./lib/winston');
+var metacritic = require('./lib/metacritic')
 
 var getImdbId = function(tmdb_id) {
 
