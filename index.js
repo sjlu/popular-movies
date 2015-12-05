@@ -10,6 +10,23 @@ var trakt = require('./lib/trakt');
 var winston = require('./lib/winston');
 var metacritic = require('./lib/metacritic')
 
+var getMetacriticMovies = function() {
+
+  return Promise
+    .resolve()
+    .then(function() {
+      return metacritic()
+    })
+    .map(function(metacriticMovie) {
+      return tmdb.searchMovie(metacriticMovie.title)
+        .then(function(movie) {
+          movie.metacritic_score = metacriticMovie.score
+          return movie
+        })
+    }, {concurrency: 1})
+
+}
+
 var getImdbId = function(tmdb_id) {
 
   return Promise.resolve()
@@ -51,7 +68,7 @@ var filterByReleaseDate = function(movies) {
     .then(function(movies) {
       // filter down these movies a little bit
       var tooOld = moment().subtract(2, 'year').valueOf()
-      var tooNew = moment().subtract(30, 'days').valueOf()
+      var tooNew = moment().subtract(7, 'days').valueOf()
 
       return _.filter(movies, function(movie) {
         var releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
@@ -65,9 +82,47 @@ var filterByPopularity = function(movies) {
 
   return Promise.resolve(movies)
     .then(function(movies) {
-      // filter down anything that's Waaaay to unpopular
+      // filter down anything that's waaaay too unpopular
       return _.filter(movies, function(movie) {
-        return movie.popularity >= 2.5;
+        winston.info('filterByPopularity', {
+          title: movie.title,
+          popularity: movie.popularity
+        })
+        return movie.popularity >= 3.0;
+      })
+
+    })
+
+}
+
+var filterByVote = function(movies) {
+
+  return Promise.resolve(movies)
+    .then(function(movies) {
+      // filter down anything that's waaaay too unpopular
+      return _.filter(movies, function(movie) {
+        winston.info('filterByVote', {
+          title: movie.title,
+          vote_average: movie.vote_average
+        })
+        return movie.vote_average >= 2.5;
+      })
+
+    })
+
+}
+
+var filterByMetacriticScore = function(movies) {
+
+  return Promise.resolve(movies)
+    .then(function(movies) {
+      // filter down anything that's waaaay too unpopular
+      return _.filter(movies, function(movie) {
+        winston.info('filterByMetacriticScore', {
+          title: movie.title,
+          metacritic_score: movie.metacritic_score
+        })
+        return movie.metacritic_score >= 25;
       })
 
     })
@@ -166,14 +221,16 @@ var sanatizeForResponse = function(movies) {
 
 module.exports = function(cb) {
 
-  return Promise.resolve(tmdb.getMovies())
+  return Promise.resolve(getMetacriticMovies())
     .bind({})
     .then(filterByReleaseDate)
+    // .then(filterByVote)
+    // .then(filterByMetacriticScore)
     .then(filterByPopularity)
-    .then(timeWeightField('vote_count'))
-    .then(filterByGeometricAverage('weighted_vote_count'))
+    // .then(timeWeightField('vote_count'))
+    // .then(filterByGeometricAverage('weighted_vote_count'))
     .then(associateImdbIds)
-    .then(getTraktData)
+    // .then(getTraktData)
     // .then(filterByGeometricAverage('plays'))
     .then(uniqueMovies)
     .then(sanatizeForResponse)
