@@ -166,7 +166,7 @@ var sanatizeForResponse = function(movies) {
 
 module.exports = function(cb) {
 
-  var q = Promise.resolve(tmdb.getMovies())
+  return Promise.resolve(tmdb.getMovies())
     .bind({})
     .then(filterByReleaseDate)
     .then(filterByPopularity)
@@ -177,11 +177,6 @@ module.exports = function(cb) {
     // .then(filterByGeometricAverage('plays'))
     .then(uniqueMovies)
     .then(sanatizeForResponse)
-
-  if (cb) {
-    q.nodeify(cb)
-  } else {
-    return q
-  }
+    .nodeify(cb)
 
 }
