@@ -4,7 +4,9 @@
   "description": "A library to help determine what movies to watch",
   "main": "index.js",
   "scripts": {
-    "test": "./bin/test"
+    "test": "./bin/test",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "engines": {
     "node": "0.12.x",
@@ -25,6 +27,11 @@
   "homepage": "https://github.com/sjlu/popular-movies",
   "devDependencies": {
     "chai": "^3.0.0",
+    "eslint": "^2.10.2",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.8.0",
+    "eslint-plugin-jsx-a11y": "^1.2.2",
+    "eslint-plugin-react": "^5.1.1",
     "mocha": "^2.2.5"
   },
   "dependencies": {
@@ -41,5 +48,8 @@
     "temp-write": "^1.1.1",
     "urijs": "^1.17.0",
     "winston": "^1.0.0"
+  },
+  "engines": {
+    "node": "6.1.0"
   }
 }

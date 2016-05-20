@@ -1,22 +1,17 @@
 #!/usr/bin/env node
-var Promise = require('bluebird')
-var index = require('../index')
-var s3 = require('../lib/s3')
-var tempWrite = require('temp-write');
-tempWrite = Promise.promisify(tempWrite);
-var winston = require('../lib/winston');
+const Promise = require('bluebird');
+const index = require('../index');
+const s3 = require('../lib/s3');
+const tempWrite = Promise.promisify(require('temp-write'));
+const winston = require('../lib/winston');
 
 Promise.resolve(index())
-  .then(function(movies) {
-    return tempWrite(JSON.stringify(movies))
+  .then(movies => tempWrite(JSON.stringify(movies)))
+  .then(path => s3.uploadJson(path, 'movies.json'))
+  .then(() => {
+    process.exit(0);
   })
-  .then(function(path) {
-    return s3.uploadJson(path, "movies.json")
-  })
-  .then(function() {
-    process.exit(0)
-  })
-  .catch(function(err) {
-    winston.error(err)
-    process.exit(1)
-  })
+  .catch(err => {
+    winston.error(err);
+    process.exit(1);
+  });
