@@ -1,227 +1,155 @@
-var tmdb = require('./lib/tmdb')
-var Promise = require('bluebird');
-var config = require('./lib/config');
-var moment = require('moment');
-var _ = require('lodash');
-var inspect = require('./lib/inspect')
-var redis = require('./lib/redis');
-var Stats = require('fast-stats').Stats;
-var trakt = require('./lib/trakt');
-var winston = require('./lib/winston');
-var metacritic = require('./lib/metacritic')
+const tmdb = require('./lib/tmdb');
+const Promise = require('bluebird');
+const moment = require('moment');
+const _ = require('lodash');
+const redis = require('./lib/redis');
+const Stats = require('fast-stats').Stats;
+const trakt = require('./lib/trakt');
+const winston = require('./lib/winston');
+const metacritic = require('./lib/metacritic');
 
-var getMetacriticMovies = function() {
-
-  return Promise
+const getMetacriticMovies = () =>
+  Promise
     .resolve()
-    .then(function() {
-      return metacritic()
-    })
-    .map(function(metacriticMovie) {
-      return tmdb.searchMovie(metacriticMovie.title)
-        .then(function(movie) {
-          movie.metacritic_score = metacriticMovie.score
-          return movie
-        })
-    }, {concurrency: 1})
+    .then(() => metacritic())
+    .map(metacriticMovie =>
+      tmdb.searchMovie(metacriticMovie.title)
+        .then(movie => {
+          movie.metacritic_score = metacriticMovie.score;
+          return movie;
+        }), { concurrency: 1 });
 
-}
-
-var getImdbId = function(tmdb_id) {
-
-  return Promise.resolve()
-    .then(function() {
-      return redis.getAsync(tmdb_id)
-    })
-    .then(function(imdb_id) {
-
-      if (imdb_id) {
-        return imdb_id
+const getImdbId = tmdbId =>
+  Promise.resolve()
+    .then(() => redis.getAsync(tmdbId))
+    .then(imdbId => {
+      if (imdbId) {
+        return imdbId;
       }
 
-      return tmdb.getMovie(tmdb_id)
-        .then(function(movie) {
-          return movie.imdb_id
-        })
-
+      return tmdb.getMovie(tmdbId)
+        .then(movie => movie.imdbId);
     })
-    .then(function(imdb_id) {
+    .then(imdbId => {
+      this.imdbId = imdbId;
 
-      this.imdb_id = imdb_id
-
-      if (imdb_id) {
-        return redis.setAsync(tmdb_id, imdb_id)
+      if (imdbId) {
+        return redis.setAsync(tmdbId, imdbId);
       }
-
+      return null;
     })
-    .then(function() {
+    .then(() => this.imdbId);
 
-      return this.imdb_id
-
-    })
-
-}
-
-var filterByReleaseDate = function(movies) {
-
-  return Promise.resolve(movies)
-    .then(function(movies) {
+const filterByReleaseDate = movies =>
+  Promise.resolve(movies)
+    .then(resolvedMovies => {
       // filter down these movies a little bit
-      var tooOld = moment().subtract(2, 'year').valueOf()
-      var tooNew = moment().subtract(7, 'days').valueOf()
+      const tooOld = moment().subtract(2, 'year').valueOf();
+      const tooNew = moment().subtract(7, 'days').valueOf();
 
-      return _.filter(movies, function(movie) {
-        var releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
+      return _.filter(resolvedMovies, movie => {
+        const releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf();
         return releaseDate >= tooOld && releaseDate <= tooNew;
-      })
-    })
+      });
+    });
 
-}
-
-var filterByPopularity = function(movies) {
-
-  return Promise.resolve(movies)
-    .then(function(movies) {
+const filterByPopularity = movies =>
+  Promise.resolve(movies)
+    .then(resolvedMovies =>
       // filter down anything that's waaaay too unpopular
-      return _.filter(movies, function(movie) {
+      _.filter(resolvedMovies, movie => {
         winston.info('filterByPopularity', {
           title: movie.title,
-          popularity: movie.popularity
-        })
+          popularity: movie.popularity,
+        });
         return movie.popularity >= 3.0;
-      })
+      }));
 
-    })
-
-}
-
-var filterByVote = function(movies) {
-
-  return Promise.resolve(movies)
-    .then(function(movies) {
+const filterByVote = movies =>
+  Promise.resolve(movies)
+    .then(resolvedMovies =>
       // filter down anything that's waaaay too unpopular
-      return _.filter(movies, function(movie) {
+      _.filter(resolvedMovies, movie => {
         winston.info('filterByVote', {
           title: movie.title,
-          vote_average: movie.vote_average
-        })
+          vote_average: movie.vote_average,
+        });
         return movie.vote_average >= 2.5;
-      })
+      }));
 
-    })
-
-}
-
-var filterByMetacriticScore = function(movies) {
-
-  return Promise.resolve(movies)
-    .then(function(movies) {
+const filterByMetacriticScore = movies =>
+  Promise.resolve(movies)
+    .then(resolvedMovies =>
       // filter down anything that's waaaay too unpopular
-      return _.filter(movies, function(movie) {
+      _.filter(resolvedMovies, movie => {
         winston.info('filterByMetacriticScore', {
           title: movie.title,
-          metacritic_score: movie.metacritic_score
-        })
+          metacritic_score: movie.metacritic_score,
+        });
         return movie.metacritic_score >= 25;
-      })
+      }));
 
-    })
+const timeWeightField = field => {
+  const halfYearAgo = moment().subtract(6, 'months').valueOf();
 
-}
-
-var timeWeightField = function(field) {
-
-  var halfYearAgo = moment().subtract(6, 'months').valueOf()
-
-  return function(movies) {
+  return movies =>
     // movies that are less than half a year old
     // get their values multiplied by x2?
-    return _.map(movies, function(movie) {
-      var value = movie[field]
+    _.map(movies, movie => {
+      let value = movie[field];
       if (moment(movie.release_date, 'YYYY-MM-DD').valueOf() > halfYearAgo) {
-        value *= 1.5
+        value *= 1.5;
       }
-      movie["weighted_" + field] = value;
-      console.log(movie)
-      return movie
-    })
+      movie[`weighted_${field}`] = value;
+      console.log(movie);
+      return movie;
+    });
+};
 
-  }
+const filterByGeometricAverage = field =>
+  movies => {
+    const stats = new Stats().push(_.pluck(movies, field));
+    const mean = stats.gmean();
 
-}
-
-var filterByGeometricAverage = function(field) {
-
-  return function(movies) {
-    var stats = new Stats().push(_.pluck(movies, field))
-    var mean = stats.gmean()
-
-    return _.filter(movies, function(movie) {
+    return _.filter(movies, movie => {
       if (movie[field] < mean) {
         winston.warn(field, {
           title: movie.title,
-          mean: mean,
-          value: movie[field]
-        })
+          mean,
+          value: movie[field],
+        });
       }
 
-      return movie[field] >= mean
-    })
-  }
+      return movie[field] >= mean;
+    });
+  };
 
-}
+const associateImdbIds = movies =>
+  Promise.resolve(movies)
+    .map(movie =>
+      // we then need to map an imdbId to each and every movie
+      getImdbId(movie.id)
+        .then(imdbId => {
+          movie.imdbId = imdbId;
+          return movie;
+        }), { concurrency: 1 });
 
-var associateImdbIds = function(movies) {
+const getTraktData = movies =>
+  Promise.resolve(movies)
+    .map(movie =>
+      Promise.resolve(trakt.getMovie(movie.imdbId))
+        .then(traktMovie => _.extend(movie, traktMovie)), { concurrency: 1 });
 
-  return Promise.resolve(movies)
-    .map(function(movie) {
-
-      // we then need to map an imdb_id to each and every movie
-      return getImdbId(movie.id)
-        .then(function(imdb_id) {
-          movie.imdb_id = imdb_id;
-          return movie
-        })
-
-    }, {concurrency: 1})
-
-}
-
-var getTraktData = function(movies) {
-
-  return Promise.resolve(movies)
-    .map(function(movie) {
-
-      return Promise.resolve(trakt.getMovie(movie.imdb_id))
-        .then(function(traktMovie) {
-          return _.extend(movie, traktMovie)
-        })
+const uniqueMovies = movies =>
+  _.uniq(movies, m => m.imdbId);
 
 
-    }, {concurrency: 1})
+const sanatizeForResponse = movies =>
+  Promise.resolve(movies)
+    .map(movie => _.pick(movie, ['title', 'imdbId', 'poster_url']));
 
-}
-
-var uniqueMovies = function(movies) {
-
-  return _.uniq(movies, function(m) {
-    return m.imdb_id;
-  })
-
-}
-
-var sanatizeForResponse = function(movies) {
-
-  return Promise.resolve(movies)
-    .map(function(movie) {
-      return _.pick(movie, ["title", "imdb_id", "poster_url"])
-    })
-
-}
-
-module.exports = function(cb) {
-
-  return Promise.resolve(getMetacriticMovies())
+module.exports = cb =>
+  Promise.resolve(getMetacriticMovies())
     .bind({})
     .then(filterByReleaseDate)
     // .then(filterByVote)
@@ -234,6 +162,4 @@ module.exports = function(cb) {
     // .then(filterByGeometricAverage('plays'))
     .then(uniqueMovies)
     .then(sanatizeForResponse)
-    .nodeify(cb)
-
-}
+    .nodeify(cb);
