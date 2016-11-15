@@ -1,19 +1,19 @@
 # popular-movies
 
-Tries to create a list of popular movies based on a series of heuristics
-
-## How it runs
-
-Heroku's scheduler runs `bin/run` once a day which updates the S3 bucket.
+This tool runs nightly on Heroku's scheduler and updates a list of movies
+that it thinks is popular or has been in theaters. It does it's best guess
+based on a series of heuristics and sentiment from other websites.
 
 ## Develop
 
-* Clone
+* If you want to run it locally you can clone this repository and add a
+`.env` file which includes the following lines
 
-* `npm install`
+    ```
+    TMDB_KEY=
+    ```
 
-* `npm test`
+  * https://www.themoviedb.org/documentation/api
 
-## License
-
-MIT
+* Then run `npm test` and you should see an output of movies showing on
+your console and the grade it's gotten.
