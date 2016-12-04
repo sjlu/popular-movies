@@ -4,16 +4,15 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="An auto-generated list of popular movies.">
-  <meta name="keywords" content="popular, movies, list">
-  <meta name="author" content="Steven Lu">
+  <meta name="description" content="An algorithmic list of movies that look popular by a numeric heuristic">
 
   <title>Popular Movies</title>
 
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
+
   <style>
     body {
-       padding-top: 15px;
+      padding-top: 15px;
     }
 
     .poster {
@@ -27,28 +26,23 @@
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="jumbotron">
+  <div class="container">
     <h2>Popular Movies</h2>
-    <p>
-      This generates a list of movies that deem to be popular based on set or rules and algorithms
-      from sources like <a href="http://www.themoviedb.org/" target="_blank">The Movie Database</a>
-      and <a href="http://trakt.tv/" target="_blank">Trakt</a>.
-    </p>
-    <p>
-      You can use this this data from <a href="https://s3.amazonaws.com/popular-movies/movies.json">Amazon S3</a>.
-    </p>
-    <p>
-      You can learn more about the project by visiting it on <a href="https://github.com/sjlu/popular-movies" target="_blank">Github</a>.
-    </p>
+    <h4>
+      An algorithmic list of movies that look popular by a numeric heuristic.
+      You can check the actual details out on
+      <a href="https://github.com/sjlu/popular-movies" target="_blank">GitHub</a>
+      and use the list <a href="https://s3.amazonaws.com/popular-movies/movies.json">here</a>
+    </h4>
+    <hr />
+    <div id="posters" class="row">
+    </div>
   </div>
-  <div id="posters"></div>
-</div>
-<script id="poster-template" type="text/x-handlebars-template">
-  <div class="poster col-xs-12 col-sm-4">
-    <img src="{{url}}" class="img-responsive" />
-  </div>
-</script>
+  <script id="poster-template" type="text/x-handlebars-template">
+    <div class="four columns">
+      <img src="{{url}}" class="u-max-full-width" />
+    </div>
+  </script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
   <script type="text/javascript">
