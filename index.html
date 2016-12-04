@@ -8,10 +8,12 @@
 
   <title>Popular Movies</title>
 
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
 
   <style>
     body {
+      font-family: 'Open Sans', sans-serif;
       padding-top: 15px;
     }
 
@@ -30,10 +32,12 @@
     <h2>Popular Movies</h2>
     <h4>
       An algorithmic list of movies that look popular by a numeric heuristic.
-      You can check the actual details out on
-      <a href="https://github.com/sjlu/popular-movies" target="_blank">GitHub</a>
-      and use the list <a href="https://s3.amazonaws.com/popular-movies/movies.json">here</a>
     </h4>
+    <p>
+      <a href="https://s3.amazonaws.com/popular-movies/movies.json">JSON List</a>
+      &mdash;
+      <a href="https://github.com/sjlu/popular-movies" target="_blank">GitHub</a>
+    </p>
     <hr />
     <div id="posters" class="row">
     </div>
