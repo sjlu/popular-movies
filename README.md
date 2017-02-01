@@ -4,11 +4,11 @@ This tool makes a best guess at what popular movies are based on a
 series of heuristics from multiple websites. This then returns a 
 list of movies with their posters and IMDB ID.
 
-* Movies will come and go on the list since the heuristic figures out
-  what the general sentiment of movies currently is
-* Movies older than a year will fall off the list
-* Movies need to be at least 3 weeks old to generate a "stable" rating
-  and consensus
+Popular movies are based on some general rules:
+
+* Rating greater than the general sentiment of movies currently out
+* Released at less than a year ago
+* At least 3 weeks old to generate a "stable" rating
 
 ## Usage
 
