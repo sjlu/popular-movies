@@ -7,7 +7,7 @@ list of movies with their posters and IMDB ID.
 Popular movies are based on some general rules:
 
 * Rating greater than the general sentiment of movies currently out
-* Released at less than a year ago
+* Released less than a year ago
 * At least 3 weeks old to generate a "stable" rating
 
 ## Usage
