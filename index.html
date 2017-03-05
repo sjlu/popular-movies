@@ -43,7 +43,7 @@
   </div>
   <script id="poster-template" type="text/x-handlebars-template">
     <div class="poster four columns">
-      <img src="{{url}}" class="u-max-full-width" />
+      <a href="{{link}}"><img src="{{url}}" class="u-max-full-width" /></a>
     </div>
   </script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -62,7 +62,8 @@
           }
 
           currentRow.append(posterTemplate({
-            url: movie.poster_url
+            url: movie.poster_url,
+            link: "http://www.imdb.com/title/" + movie.imdb_id + "/"
           }));
         }
 
