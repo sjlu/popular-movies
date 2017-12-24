@@ -88,7 +88,7 @@ var filterByPopularity = function(movies) {
           title: movie.title,
           popularity: movie.popularity
         })
-        return movie.popularity >= 3.0;
+        return movie.popularity >= 10.0;
       })
 
     })
@@ -219,6 +219,16 @@ var sanatizeForResponse = function(movies) {
 
 }
 
+var filterByValue = function (key, value) {
+
+  return function (movies) {
+    return _.filter(movies, function (movie) {
+      return _.get(movie, key, 0) >= value 
+    })
+  }
+
+}
+
 module.exports = function(cb) {
 
   return Promise.resolve(getMetacriticMovies())
@@ -226,6 +236,7 @@ module.exports = function(cb) {
     .then(filterByReleaseDate)
     // .then(filterByVote)
     // .then(filterByMetacriticScore)
+    .then(filterByValue('vote_count', 10))
     .then(filterByPopularity)
     // .then(timeWeightField('vote_count'))
     // .then(filterByGeometricAverage('weighted_vote_count'))
