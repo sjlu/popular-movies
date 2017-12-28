@@ -6,10 +6,6 @@
   "scripts": {
     "test": "./bin/test"
   },
-  "engines": {
-    "node": "0.12.x",
-    "npm": "3.3.x"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/sjlu/popular-movies.git"
