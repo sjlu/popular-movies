@@ -23,7 +23,9 @@ var getMetacriticMovies = function() {
           movie.metacritic_score = metacriticMovie.score
           return movie
         })
-    }, {concurrency: 1})
+    }, {
+      concurrency: 1
+    })
 
 }
 
@@ -223,7 +225,7 @@ var filterByValue = function (key, value) {
 
   return function (movies) {
     return _.filter(movies, function (movie) {
-      return _.get(movie, key, 0) >= value 
+      return _.get(movie, key, 0) >= value
     })
   }
 

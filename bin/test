@@ -1,2 +1,2 @@
 #!/bin/bash
-NODE_ENV=test mocha $1
+NODE_ENV=test ./node_modules/.bin/mocha $1
