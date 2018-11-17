@@ -20,20 +20,19 @@
   },
   "homepage": "https://github.com/sjlu/popular-movies",
   "devDependencies": {
-    "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "eyes": "^0.1.8"
   },
   "dependencies": {
     "aws-sdk": "^2.358.0",
     "bluebird": "^3.5.3",
     "cheerio": "^0.22.0",
     "dotenv": "^6.1.0",
-    "eyes": "^0.1.8",
-    "fast-stats": "0.0.4",
     "ioredis": "^4.2.0",
     "lodash": "^4.17.11",
     "moment": "^2.10.3",
+    "must": "^0.13.4",
     "request": "^2.57.0",
     "urijs": "^1.17.0",
     "winston": "^2.4.4"
