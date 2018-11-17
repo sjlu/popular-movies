@@ -1,2 +1,8 @@
 #!/bin/bash
-NODE_ENV=test ./node_modules/.bin/mocha $1
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+node_modules/.bin/standard
+NODE_ENV=test ./node_modules/.bin/mocha $1 --exit
