@@ -33,7 +33,7 @@ var getImdbId = function(tmdb_id) {
 
   return Promise.resolve()
     .then(function() {
-      return redis.getAsync(tmdb_id)
+      return redis.get(tmdb_id)
     })
     .then(function(imdb_id) {
 
@@ -52,7 +52,7 @@ var getImdbId = function(tmdb_id) {
       this.imdb_id = imdb_id
 
       if (imdb_id) {
-        return redis.setAsync(tmdb_id, imdb_id)
+        return redis.set(tmdb_id, imdb_id)
       }
 
     })
