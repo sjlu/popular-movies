@@ -6,7 +6,6 @@ var winston = require('../lib/winston');
 
 Promise.resolve(index())
   .then(function (movies) {
-    console.log(movies)
     return s3.upload('movies.json', JSON.stringify(movies))
   })
   .then(function () {

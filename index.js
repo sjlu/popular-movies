@@ -144,7 +144,6 @@ var timeWeightField = function(field) {
         value *= 1.5
       }
       movie["weighted_" + field] = value;
-      console.log(movie)
       return movie
     })
 
