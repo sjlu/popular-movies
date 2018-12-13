@@ -9,7 +9,7 @@ var config = {
   TMDB_KEY: '',
   TRAKT_KEY: '',
   TMDB_POSTER_URL: 'http://image.tmdb.org/t/p/w500',
-  REDISCLOUD_URL: 'redis://localhost:6379',
+  REDIS_URL: 'redis://localhost:6379',
   AWS_BUCKET: 'popular-movies',
   AWS_KEY: '',
   AWS_SECRET: ''
