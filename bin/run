@@ -1,12 +1,56 @@
 #!/usr/bin/env node
 var Promise = require('bluebird')
-var index = require('../index')
+var Index = require('../index')
 var s3 = require('../lib/s3')
 var winston = require('../lib/winston');
 
-Promise.resolve(index())
-  .then(function (movies) {
-    return s3.upload('movies.json', JSON.stringify(movies))
+var build = function (listBuilder, filename, opts) {
+  return Promise
+    .bind({
+      listBuilder: listBuilder,
+      filename: filename,
+      opts: opts
+    })
+    .then(function () {
+      winston.info(this.filename, this.opts)
+      return this.listBuilder.filter(this.opts)
+    })
+    .then(function (movies) {
+      winston.info(this.filename, {
+        count: movies.length
+      })
+
+      return s3.upload(this.filename, JSON.stringify(movies))
+    })
+}
+
+Promise
+  .bind({
+    listBuilder: new Index()
+  })
+  .then(function () {
+    return [
+      {
+        filename: 'movies.json'
+      },
+      {
+        filename: 'movies-metacritic-min50.json',
+        opts: {
+          min_score: 50
+        }
+      },
+      {
+        filename: 'movies-metacritic-min80.json',
+        opts: {
+          min_score: 80
+        }
+      }
+    ]
+  })
+  .map(function (manifest) {
+    return build(this.listBuilder, manifest.filename, manifest.opts)
+  }, {
+    concurrency: 1
   })
   .then(function () {
     process.exit(0)
@@ -15,3 +59,4 @@ Promise.resolve(index())
     winston.error(err)
     process.exit(1)
   })
+

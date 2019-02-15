@@ -2,7 +2,7 @@
 var Promise = require('bluebird')
 var expect = require('must')
 var eyes = require('eyes')
-var index = require('../index')
+var Index = require('../index')
 
 var inspect = eyes.inspector({
   pretty: true,
@@ -13,7 +13,12 @@ var inspect = eyes.inspector({
 describe('all', function () {
   it('should get me a list of movies', function () {
     return Promise
-      .resolve(index())
+      .bind({
+        listBuilder: new Index()
+      })
+      .then(function () {
+        return this.listBuilder.filter()
+      })
       .then(function (movies) {
         inspect(movies)
         expect(movies.length).must.be.above(0)
