@@ -22,6 +22,13 @@ https://s3.amazonaws.com/popular-movies/movies.json
     only poll this file once per day
   * It is recommended that you take a snapshot of this list and not
     remove based on the list no longer displaying a particular movie
+    
+There are also several other variations of the main file:
+
+| File | Description |
+| -- | -- |
+| [movies-metacritic-min50.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min50.json) | Movies with a minimum score of 50 on Metacritic |
+| [movies-metacritic-min80.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min80.json) | Movies with a minimum score of 80 on Metacritic |
 
 ## Develop
 
@@ -38,3 +45,7 @@ https://s3.amazonaws.com/popular-movies/movies.json
 
 * Then run `npm test` and you should see an output of movies showing on
   your console and the grade it's gotten
+
+## License
+
+MIT
