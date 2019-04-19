@@ -1,7 +1,7 @@
 # popular-movies
 
 This tool makes a best guess at what popular movies are based on a
-series of heuristics from multiple websites. This then returns a 
+series of heuristics from multiple websites. This then returns a
 list of movies with their posters and IMDB ID.
 
 Popular movies are based on some general rules:
@@ -22,12 +22,15 @@ https://s3.amazonaws.com/popular-movies/movies.json
     only poll this file once per day
   * It is recommended that you take a snapshot of this list and not
     remove based on the list no longer displaying a particular movie
-    
+  * Subject to fair use; excessive usage will be rate limited
+
 There are also several other variations of the main file:
 
 | File | Description |
 | -- | -- |
 | [movies-metacritic-min50.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min50.json) | Movies with a minimum score of 50 on Metacritic |
+| [movies-metacritic-min60.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min60.json) | Movies with a minimum score of 60 on Metacritic |
+| [movies-metacritic-min70.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min70.json) | Movies with a minimum score of 70 on Metacritic |
 | [movies-metacritic-min80.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min80.json) | Movies with a minimum score of 80 on Metacritic |
 
 ## Develop

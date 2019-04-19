@@ -40,6 +40,18 @@ Promise
         }
       },
       {
+        filename: 'movies-metacritic-min60.json',
+        opts: {
+          min_score: 60
+        }
+      },
+      {
+        filename: 'movies-metacritic-min70.json',
+        opts: {
+          min_score: 70
+        }
+      },
+      {
         filename: 'movies-metacritic-min80.json',
         opts: {
           min_score: 80
