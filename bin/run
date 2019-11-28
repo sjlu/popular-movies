@@ -36,27 +36,75 @@ Promise
       {
         filename: 'movies-metacritic-min50.json',
         opts: {
-          min_score: 50
+          min_metacritic_score: 50
         }
       },
       {
         filename: 'movies-metacritic-min60.json',
         opts: {
-          min_score: 60
+          min_metacritic_score: 60
         }
       },
       {
         filename: 'movies-metacritic-min70.json',
         opts: {
-          min_score: 70
+          min_metacritic_score: 70
         }
       },
       {
         filename: 'movies-metacritic-min80.json',
         opts: {
-          min_score: 80
+          min_metacritic_score: 80
         }
-      }
+      },
+      {
+        filename: 'movies-imdb-min5.json',
+        opts: {
+          min_imdb_rating: 5
+        }
+      },
+      {
+        filename: 'movies-imdb-min6.json',
+        opts: {
+          min_imdb_rating: 6
+        }
+      },
+      {
+        filename: 'movies-imdb-min7.json',
+        opts: {
+          min_imdb_rating: 7
+        }
+      },
+      {
+        filename: 'movies-imdb-min8.json',
+        opts: {
+          min_imdb_rating: 8
+        }
+      },
+      {
+        filename: 'movies-rottentomatoes-min50.json',
+        opts: {
+          min_rt_score: 50
+        }
+      },
+      {
+        filename: 'movies-rottentomatoes-min60.json',
+        opts: {
+          min_rt_score: 60
+        }
+      },
+      {
+        filename: 'movies-rottentomatoes-min70.json',
+        opts: {
+          min_rt_score: 70
+        }
+      },
+      {
+        filename: 'movies-rottentomatoes-min80.json',
+        opts: {
+          min_rt_score: 80
+        }
+      },
     ]
   })
   .map(function (manifest) {

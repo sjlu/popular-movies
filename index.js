@@ -5,6 +5,8 @@ var tmdb = require('./lib/tmdb')
 var redis = require('./lib/redis')
 var winston = require('./lib/winston')
 var metacritic = require('./lib/metacritic')
+// var imdb = require('./lib/imdb')
+var omdb = require('./lib/omdb')
 
 module.exports = (function () {
   var getMetacriticMovies = function () {
@@ -93,6 +95,33 @@ module.exports = (function () {
       })
   }
 
+  var getImdbRatings = function (movies) {
+    return Promise
+      .resolve(movies)
+      .map(function (movie) {
+        return imdb(movie.imdb_id)
+          .then(function (rating) {
+            movie.imdb_rating = rating
+            return movie
+          })
+      }, {
+        concurrency: 1
+      })
+  }
+
+  var getOmdbRatings = function (movies) {
+    return Promise
+      .resolve(movies)
+      .map(function (movie) {
+        return omdb(movie.imdb_id)
+          .then(function (ratings) {
+            return _.defaults(movie, ratings)
+          })
+      }, {
+        concurrency: 1
+      })
+  }
+
   var uniqueMovies = function (movies) {
     return _.uniq(movies, function (m) {
       return m.imdb_id
@@ -144,6 +173,8 @@ module.exports = (function () {
       .then(filterByValue('vote_count', 10))
       .then(filterByPopularity)
       .then(associateImdbIds)
+      // .then(getImdbRatings)
+      .then(getOmdbRatings)
       .then(uniqueMovies)
       .then(logValues)
       .then(function (movies) {
@@ -154,12 +185,16 @@ module.exports = (function () {
 
   ListBuilder.prototype.filter = function (opts) {
     opts = _.defaults(opts, {
-      min_score: 0
+      min_metacritic_score: 0,
+      min_imdb_rating: 0,
+      min_rt_score: 0
     })
 
     return Promise
       .resolve(getMovies())
-      .then(filterByValue('metacritic_score', opts.min_score))
+      .then(filterByValue('metacritic_score', opts.min_metacritic_score))
+      .then(filterByValue('rt_score', opts.min_rt_score))
+      .then(filterByValue('imdb_rating', opts.min_imdb_rating))
       .then(sanatizeForResponse)
   }
 
