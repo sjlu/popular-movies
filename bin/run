@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var Promise = require('bluebird')
+var moment = require('moment')
 var Index = require('../index')
 var s3 = require('../lib/s3')
 var winston = require('../lib/winston')
@@ -32,6 +33,9 @@ Promise
     return [
       {
         filename: 'movies.json'
+      },
+      {
+        filename: `movies-${moment().format('YYYYMMDD')}.json`,
       },
       {
         filename: 'movies-metacritic-min50.json',
