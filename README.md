@@ -42,6 +42,15 @@ There are also several other variations of the main file:
 | [movies-rottentomatoes-min70.json](https://s3.amazonaws.com/popular-movies/movies-rottentomatoes-min70.json) | Movies with a minimum score of 70 on Rotten Tomatoes |
 | [movies-rottentomatoes-min80.json](https://s3.amazonaws.com/popular-movies/movies-rottentomatoes-min80.json) | Movies with a minimum score of 80 on Rotten Tomatoes |
 
+If you're looking for historical files, you can amend a date to the
+main file like so:
+
+```
+https://s3.amazonaws.com/popular-movies/movies-20191202.json
+```
+
+_This file is only available from December 2, 2019 onwards._
+
 ## Develop
 
 * Make sure you are running Node.js and a local instance of Redis
