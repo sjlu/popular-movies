@@ -9,7 +9,7 @@ Popular movies are based on some general rules:
 * Rating greater than the general sentiment of movies currently out
 * Released less than a year ago
 * At least 3 weeks old to generate a "stable" rating
-* Does not consider "tastes" or categories of movies
+* Does not consider tastes, categories or genres of movies
 
 ## Usage
 
