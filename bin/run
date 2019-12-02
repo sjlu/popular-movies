@@ -2,7 +2,7 @@
 var Promise = require('bluebird')
 var Index = require('../index')
 var s3 = require('../lib/s3')
-var winston = require('../lib/winston');
+var winston = require('../lib/winston')
 
 var build = function (listBuilder, filename, opts) {
   return Promise

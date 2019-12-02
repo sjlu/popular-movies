@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+var Promise = require('bluebird')
+var Index = require('../index')
+var json2csv = require('../lib/json2csv')
+var fs = Promise.promisifyAll(require('fs'))
+
+Promise
+  .bind({
+    listBuilder: new Index()
+  })
+  .then(function () {
+    return this.listBuilder.dump()
+  })
+  .then(function (data) {
+    return json2csv(data)
+  })
+  .then(function (csvData) {
+    return fs.writeFileAsync('dump.csv', csvData)
+  })
+  .then(function () {
+    process.exit(0)
+  })
+  .catch(function (err) {
+    winston.error(err)
+    process.exit(1)
+  })

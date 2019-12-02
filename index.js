@@ -133,6 +133,13 @@ module.exports = (function () {
     }
   }
 
+  var calculateMovieAge = function (movies) {
+    return _.map(movies, function (movie) {
+      movie.age = moment().diff(movie.release_date, 'days')
+      return movie
+    })
+  }
+
   var logValues = function (movies) {
     _.each(movies, function (movie) {
       winston.info(movie)
@@ -165,6 +172,7 @@ module.exports = (function () {
       .then(getImdbRatings)
       .then(getOmdbRatings)
       .then(uniqueMovies)
+      .then(calculateMovieAge)
       .then(logValues)
       .then(function (movies) {
         allMovies = movies
@@ -185,6 +193,10 @@ module.exports = (function () {
       .then(filterByValue('rt_score', opts.min_rt_score))
       .then(filterByValue('imdb_rating', opts.min_imdb_rating))
       .then(sanatizeForResponse)
+  }
+
+  ListBuilder.prototype.dump = function () {
+    return getMovies()
   }
 
   return ListBuilder
