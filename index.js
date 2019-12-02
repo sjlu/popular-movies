@@ -5,7 +5,6 @@ var tmdb = require('./lib/tmdb')
 var redis = require('./lib/redis')
 var winston = require('./lib/winston')
 var metacritic = require('./lib/metacritic')
-// var imdb = require('./lib/imdb')
 var omdb = require('./lib/omdb')
 
 module.exports = (function () {
@@ -96,17 +95,7 @@ module.exports = (function () {
   }
 
   var getImdbRatings = function (movies) {
-    return Promise
-      .resolve(movies)
-      .map(function (movie) {
-        return imdb(movie.imdb_id)
-          .then(function (rating) {
-            movie.imdb_rating = rating
-            return movie
-          })
-      }, {
-        concurrency: 1
-      })
+    return movies
   }
 
   var getOmdbRatings = function (movies) {
@@ -173,7 +162,7 @@ module.exports = (function () {
       .then(filterByValue('vote_count', 10))
       .then(filterByPopularity)
       .then(associateImdbIds)
-      // .then(getImdbRatings)
+      .then(getImdbRatings)
       .then(getOmdbRatings)
       .then(uniqueMovies)
       .then(logValues)
