@@ -24,7 +24,7 @@
     "eslint-config-standard": "^17.0.0",
     "eyes": "^0.1.8",
     "json2csv": "^4.5.4",
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "must": "^0.13.4"
   },
   "dependencies": {
