@@ -1,10 +1,10 @@
-var _ = require('lodash')
-var dotenv = require('dotenv')
+const _ = require('lodash')
+const dotenv = require('dotenv')
 
 // load dotenv config vars if available
 dotenv.load()
 
-var config = {
+const config = {
   DEBUG: false,
   TMDB_KEY: '',
   TRAKT_KEY: '',

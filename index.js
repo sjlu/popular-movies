@@ -1,14 +1,14 @@
-var Promise = require('bluebird')
-var moment = require('moment')
-var _ = require('lodash')
-var tmdb = require('./lib/tmdb')
-var fsCache = require('./lib/fs_cache')
-var winston = require('./lib/winston')
-var metacritic = require('./lib/metacritic')
-var omdb = require('./lib/omdb')
+const Promise = require('bluebird')
+const moment = require('moment')
+const _ = require('lodash')
+const tmdb = require('./lib/tmdb')
+const fsCache = require('./lib/fs_cache')
+const winston = require('./lib/winston')
+const metacritic = require('./lib/metacritic')
+const omdb = require('./lib/omdb')
 
 module.exports = (function () {
-  var getMetacriticMovies = function () {
+  const getMetacriticMovies = function () {
     return Promise
       .resolve()
       .then(function () {
@@ -25,7 +25,7 @@ module.exports = (function () {
       })
   }
 
-  var getImdbId = function (tmdbId) {
+  const getImdbId = function (tmdbId) {
     return Promise
       .resolve()
       .then(function () {
@@ -53,22 +53,22 @@ module.exports = (function () {
       })
   }
 
-  var filterByReleaseDate = function (movies) {
+  const filterByReleaseDate = function (movies) {
     return Promise
       .resolve(movies)
       .then(function (movies) {
         // filter down these movies a little bit
-        var tooOld = moment().subtract(2, 'year').valueOf()
-        var tooNew = moment().subtract(7, 'days').valueOf()
+        const tooOld = moment().subtract(2, 'year').valueOf()
+        const tooNew = moment().subtract(7, 'days').valueOf()
 
         return _.filter(movies, function (movie) {
-          var releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
+          const releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
           return releaseDate >= tooOld && releaseDate <= tooNew
         })
       })
   }
 
-  var filterByPopularity = function (movies) {
+  const filterByPopularity = function (movies) {
     return Promise
       .resolve(movies)
       .then(function (movies) {
@@ -79,7 +79,7 @@ module.exports = (function () {
       })
   }
 
-  var associateImdbIds = function (movies) {
+  const associateImdbIds = function (movies) {
     return Promise
       .resolve(movies)
       .map(function (movie) {
@@ -94,11 +94,11 @@ module.exports = (function () {
       })
   }
 
-  var getImdbRatings = function (movies) {
+  const getImdbRatings = function (movies) {
     return movies
   }
 
-  var getOmdbRatings = function (movies) {
+  const getOmdbRatings = function (movies) {
     return Promise
       .resolve(movies)
       .map(function (movie) {
@@ -111,13 +111,13 @@ module.exports = (function () {
       })
   }
 
-  var uniqueMovies = function (movies) {
+  const uniqueMovies = function (movies) {
     return _.uniq(movies, function (m) {
       return m.imdb_id
     })
   }
 
-  var sanatizeForResponse = function (movies) {
+  const sanatizeForResponse = function (movies) {
     return Promise
       .resolve(movies)
       .map(function (movie) {
@@ -125,7 +125,7 @@ module.exports = (function () {
       })
   }
 
-  var filterByValue = function (key, value) {
+  const filterByValue = function (key, value) {
     return function (movies) {
       return _.filter(movies, function (movie) {
         return _.get(movie, key, 0) >= value
@@ -133,14 +133,14 @@ module.exports = (function () {
     }
   }
 
-  var calculateMovieAge = function (movies) {
+  const calculateMovieAge = function (movies) {
     return _.map(movies, function (movie) {
       movie.age = moment().diff(movie.release_date, 'days')
       return movie
     })
   }
 
-  var logValues = function (movies) {
+  const logValues = function (movies) {
     _.each(movies, function (movie) {
       winston.info(movie)
     })
@@ -153,11 +153,11 @@ module.exports = (function () {
   // able to filter after the fact with options
   //
 
-  var allMovies = null
+  let allMovies = null
 
-  var ListBuilder = function () {}
+  const ListBuilder = function () {}
 
-  var getMovies = function () {
+  const getMovies = function () {
     if (allMovies) {
       return allMovies
     }

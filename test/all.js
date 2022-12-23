@@ -1,10 +1,10 @@
 /* eslint-env mocha */
-var Promise = require('bluebird')
-var expect = require('must')
-var eyes = require('eyes')
-var Index = require('../index')
+const Promise = require('bluebird')
+const expect = require('must')
+const eyes = require('eyes')
+const Index = require('../index')
 
-var inspect = eyes.inspector({
+const inspect = eyes.inspector({
   pretty: true,
   hideFunctions: true,
   maxLength: 0
