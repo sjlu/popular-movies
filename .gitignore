@@ -5,3 +5,4 @@ public/build
 *.log
 .idea
 .DS_Store
+.cache/

@@ -2,7 +2,7 @@ var Promise = require('bluebird')
 var moment = require('moment')
 var _ = require('lodash')
 var tmdb = require('./lib/tmdb')
-var redis = require('./lib/redis')
+var fsCache = require('./lib/fs_cache')
 var winston = require('./lib/winston')
 var metacritic = require('./lib/metacritic')
 var omdb = require('./lib/omdb')
@@ -29,11 +29,11 @@ module.exports = (function () {
     return Promise
       .resolve()
       .then(function () {
-        return redis.get(tmdbId)
+        return fsCache.get(tmdbId)
       })
-      .then(function (imdbId) {
-        if (imdbId) {
-          return imdbId
+      .then(function (cachedData) {
+        if (cachedData) {
+          return cachedData.imdbId
         }
 
         return tmdb.getMovie(tmdbId)
@@ -45,7 +45,7 @@ module.exports = (function () {
         this.imdbId = imdbId
 
         if (imdbId) {
-          return redis.set(tmdbId, imdbId)
+          return fsCache.set(tmdbId, { imdbId })
         }
       })
       .then(function () {
