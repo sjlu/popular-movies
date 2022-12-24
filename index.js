@@ -55,7 +55,7 @@ const filterByReleaseDate = function (movies) {
 const filterByPopularity = function (movies) {
   // filter down anything that's waaaay too unpopular
   return _.filter(movies, function (movie) {
-    return movie.popularity >= 10.0
+    return movie.popularity >= 30.0
   })
 }
 

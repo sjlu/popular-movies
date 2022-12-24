@@ -1,5 +1,4 @@
 /* eslint-env mocha */
-const Promise = require('bluebird')
 const expect = require('must')
 const Index = require('../index')
 const imdb = require('../lib/imdb')
@@ -43,7 +42,7 @@ describe('all', function () {
 
   it('should get me a list of movies', async function () {
     this.timeout(20000)
-    var listBuilder = new Index()
+    const listBuilder = new Index()
     const movies = await listBuilder.filter()
 
     expect(movies.length).gt(0)
