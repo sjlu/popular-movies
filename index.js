@@ -20,7 +20,7 @@ const getTmdbDetails = function (movies) {
 }
 
 const getImdbId = function (tmdbId) {
-  return fsCache.wrap(tmdbId, async function () {
+  return fsCache.wrap(tmdbId, function () {
     return tmdb.getMovie(tmdbId)
       .then(function (movie) {
         return { imdbId: movie.imdb_id }
@@ -39,24 +39,6 @@ const associateImdbIds = function (movies) {
           return movie
         })
     })
-}
-
-const filterByReleaseDate = function (movies) {
-  // filter down these movies a little bit
-  const tooOld = moment().subtract(2, 'year').valueOf()
-  const tooNew = moment().subtract(7, 'days').valueOf()
-
-  return _.filter(movies, function (movie) {
-    const releaseDate = moment(movie.release_date, 'YYYY-MM-DD').valueOf()
-    return releaseDate >= tooOld && releaseDate <= tooNew
-  })
-}
-
-const filterByPopularity = function (movies) {
-  // filter down anything that's waaaay too unpopular
-  return _.filter(movies, function (movie) {
-    return movie.popularity >= 30.0
-  })
 }
 
 const getImdbRatings = function (movies) {
@@ -99,10 +81,18 @@ const sanatizeForResponse = function (movies) {
     })
 }
 
-const filterByValue = function (key, value = 0) {
+const filterByMinValue = function (key, value = 0) {
   return function (movies) {
     return _.filter(movies, function (movie) {
       return _.get(movie, key, 0) >= value
+    })
+  }
+}
+
+const filterByMaxValue = function (key, value = 0) {
+  return function (movies) {
+    return _.filter(movies, function (movie) {
+      return _.get(movie, key, 0) <= value
     })
   }
 }
@@ -146,18 +136,18 @@ module.exports = (function () {
     return Promise
       .resolve(metacritic())
       .then(getTmdbDetails)
-      .then(filterByReleaseDate)
-      .then(filterByValue('vote_count', 10))
-      .then(filterByPopularity)
+      .then(filterByMinValue('vote_count', 10))
+      .then(filterByMinValue('popularity', 30))
+      .then(calculateMovieAge)
+      .then(filterByMinValue('age', 21))
+      .then(filterByMaxValue('age', 365))
       .then(associateImdbIds)
+      .then(uniqueMovies)
       .then(getOmdbRatings)
       .then(getImdbRatings)
-      .then(uniqueMovies)
-      .then(calculateMovieAge)
       .tap(logger)
-      .then(function (movies) {
+      .tap(function (movies) {
         allMovies = movies
-        return movies
       })
   }
 
@@ -166,9 +156,9 @@ module.exports = (function () {
   ListBuilder.prototype.filter = function (opts = {}) {
     return Promise
       .resolve(getMovies())
-      .then(filterByValue('metacritic_score', opts.min_metacritic_score))
-      .then(filterByValue('rt_score', opts.min_rt_score))
-      .then(filterByValue('imdb_rating', opts.min_imdb_rating))
+      .then(filterByMinValue('metacritic_score', opts.min_metacritic_score))
+      .then(filterByMinValue('rt_score', opts.min_rt_score))
+      .then(filterByMinValue('imdb_rating', opts.min_imdb_rating))
       .then(sanatizeForResponse)
   }
 
