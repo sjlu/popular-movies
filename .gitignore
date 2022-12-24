@@ -6,3 +6,4 @@ public/build
 .idea
 .DS_Store
 .cache/
+dump.csv

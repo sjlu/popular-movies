@@ -175,5 +175,9 @@ module.exports = (function () {
       .then(sanatizeForResponse)
   }
 
+  ListBuilder.prototype.dump = function () {
+    return allMovies
+  }
+
   return ListBuilder
 })()

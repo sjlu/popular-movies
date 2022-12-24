@@ -4,7 +4,8 @@
   "description": "A library to help determine what movies to watch",
   "main": "index.js",
   "scripts": {
-    "test": "./bin/test"
+    "test": "./bin/test",
+    "deploy": "./bin/deploy.js"
   },
   "repository": {
     "type": "git",

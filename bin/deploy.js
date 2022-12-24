@@ -1,15 +1,17 @@
 #!/usr/bin/env node
-var Promise = require('bluebird')
-var moment = require('moment')
-var Index = require('../index')
-var s3 = require('../lib/s3')
+const Promise = require('bluebird')
+const moment = require('moment')
+const Index = require('../index')
+const s3 = require('../lib/s3')
+const json2csv = require('../lib/json2csv')
+const fs = Promise.promisifyAll(require('fs'))
 
-var build = function (listBuilder, filename, opts = {}) {
+const build = function (listBuilder, filename, opts = {}) {
   return Promise
     .bind({
-      listBuilder: listBuilder,
-      filename: filename,
-      opts: opts
+      listBuilder,
+      filename,
+      opts
     })
     .then(function () {
       return this.listBuilder.filter(this.opts)
@@ -35,7 +37,7 @@ Promise
         filename: 'movies.json'
       },
       {
-        filename: `movies-${moment().format('YYYYMMDD')}.json`,
+        filename: `movies-${moment().format('YYYYMMDD')}.json`
       },
       {
         filename: 'movies-metacritic-min50.json',
@@ -108,11 +110,20 @@ Promise
         opts: {
           min_rt_score: 80
         }
-      },
+      }
     ]
   })
   .mapSeries(function (manifest) {
     return build(this.listBuilder, manifest.filename, manifest.opts)
+  })
+  .then(function () {
+    return this.listBuilder.dump()
+  })
+  .then(function (data) {
+    return json2csv(data)
+  })
+  .then(function (csvData) {
+    return fs.writeFileAsync('dump.csv', csvData)
   })
   .then(function () {
     process.exit(0)
@@ -121,4 +132,3 @@ Promise
     console.error(err)
     process.exit(1)
   })
-
