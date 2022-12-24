@@ -5,6 +5,7 @@ const Index = require('../index')
 const imdb = require('../lib/imdb')
 const metacritic = require('../lib/metacritic')
 const omdb = require('../lib/omdb')
+const tmdb = require('../lib/tmdb')
 
 describe('all', function () {
   it('should get a list of movies from metacritic', async function () {
@@ -15,6 +16,8 @@ describe('all', function () {
   })
 
   const IMDB_ID = 'tt11564570'
+  const TMDB_ID = 661374
+  const MOVIE_TITLE = 'Glass Onion: A Knives Out Mystery'
 
   it('should get an IMDB rating', async function () {
     const results = await imdb(IMDB_ID)
@@ -22,10 +25,20 @@ describe('all', function () {
     expect(results.imdb_votes).gt(1000)
   })
 
-  it ('should get an omdb response', async function () {
+  it('should get an omdb response', async function () {
     const results = await omdb(IMDB_ID)
     expect(results.imdb_rating).gt(1)
     expect(results.imdb_votes).gt(1000)
+  })
+
+  it('should get tmdb movie', async function () {
+    const movie = await tmdb.searchMovie(MOVIE_TITLE)
+    expect(movie.id).to.equal(TMDB_ID)
+  })
+
+  it('should get tmdb id', async function () {
+    const movie = await tmdb.getMovie(TMDB_ID)
+    expect(movie.imdb_id).to.equal(IMDB_ID)
   })
 
   it('should get me a list of movies', async function () {

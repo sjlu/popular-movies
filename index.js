@@ -7,17 +7,14 @@ const metacritic = require('./lib/metacritic')
 const omdb = require('./lib/omdb')
 const imdb = require('./lib/imdb')
 
-const getMetacriticMovies = function () {
+const getTmdbDetails = function (movies) {
   return Promise
-    .resolve()
-    .then(function () {
-      return metacritic()
-    })
-    .mapSeries(function (metacriticMovie) {
-      return tmdb.searchMovie(metacriticMovie.title)
-        .then(function (movie) {
-          movie.metacritic_score = metacriticMovie.score
-          return movie
+    .resolve(movies)
+    .mapSeries(function (movie) {
+      return tmdb.searchMovie(movie.title)
+        .then(function (tmdbMovie) {
+          tmdbMovie.metacritic_score = movie.score
+          return tmdbMovie
         })
     })
 }
@@ -147,8 +144,8 @@ module.exports = (function () {
     }
 
     return Promise
-      .resolve(getMetacriticMovies())
-      .bind({})
+      .resolve(metacritic())
+      .then(getTmdbDetails)
       .then(filterByReleaseDate)
       .then(filterByValue('vote_count', 10))
       .then(filterByPopularity)
