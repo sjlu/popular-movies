@@ -6,6 +6,7 @@ const fsCache = require('./lib/fs_cache')
 const winston = require('./lib/winston')
 const metacritic = require('./lib/metacritic')
 const omdb = require('./lib/omdb')
+const imdb = require('./lib/imdb')
 
 module.exports = (function () {
   const getMetacriticMovies = function () {
@@ -95,7 +96,20 @@ module.exports = (function () {
   }
 
   const getImdbRatings = function (movies) {
-    return movies
+    return Promise
+      .resolve(movies)
+      .map(function (movie) {
+        if (movie.imdb_rating && movie.imdb_rating !== 'N/A') {
+          return movie
+        }
+
+        return imdb(movie.imdb_id)
+          .then(function (ratings) {
+            return _.assign(movie, ratings)
+          })
+      }, {
+        concurrency: 1
+      })
   }
 
   const getOmdbRatings = function (movies) {
@@ -169,8 +183,8 @@ module.exports = (function () {
       .then(filterByValue('vote_count', 10))
       .then(filterByPopularity)
       .then(associateImdbIds)
-      .then(getImdbRatings)
       .then(getOmdbRatings)
+      .then(getImdbRatings)
       .then(uniqueMovies)
       .then(calculateMovieAge)
       .then(logValues)

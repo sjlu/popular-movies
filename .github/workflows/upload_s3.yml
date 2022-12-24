@@ -29,6 +29,11 @@ jobs:
           node-version: '16.x'
           cache: 'npm'
       - run: npm install
+      - name: test
+        run: ./bin/test
+        env:
+          TMDB_KEY: ${{ secrets.TMDB_KEY }}
+          OMDB_KEY: ${{ secrets.OMDB_KEY }}
       - name: run
         run: ./bin/run
         env:

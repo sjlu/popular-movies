@@ -4,5 +4,4 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-npx eslint .
 NODE_ENV=test ./node_modules/.bin/mocha --exit
