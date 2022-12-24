@@ -28,11 +28,14 @@ describe('all', function () {
     const results = await omdb(IMDB_ID)
     expect(results.imdb_rating).gt(1)
     expect(results.imdb_votes).gt(1000)
+    expect(results.rt_score).gt(1)
   })
 
   it('should get tmdb movie', async function () {
     const movie = await tmdb.searchMovie(MOVIE_TITLE)
     expect(movie.id).to.equal(TMDB_ID)
+    expect(movie.popularity).gt(1)
+    expect(movie.release_date).to.be.string()
   })
 
   it('should get tmdb id', async function () {
