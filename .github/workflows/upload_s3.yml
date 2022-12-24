@@ -13,7 +13,7 @@ jobs:
     environment: production
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Date
         run: echo DATE=$(date +%s) >> $GITHUB_ENV
       - name: Cache
