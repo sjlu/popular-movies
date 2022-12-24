@@ -23,7 +23,7 @@ describe('all', function () {
       .then(function (results) {
         inspect(results)
         expect(results.imdb_rating).gt(1)
-        expect(results.imdb_count).gt(10000)
+        expect(results.imdb_votes).gt(10000)
       })
   })
 
