@@ -102,7 +102,7 @@ const sanatizeForResponse = function (movies) {
     })
 }
 
-const filterByValue = function (key, value) {
+const filterByValue = function (key, value = 0) {
   return function (movies) {
     return _.filter(movies, function (movie) {
       return _.get(movie, key, 0) >= value
@@ -166,13 +166,7 @@ module.exports = (function () {
 
   const ListBuilder = function () {}
 
-  ListBuilder.prototype.filter = function (opts) {
-    opts = _.defaults(opts, {
-      min_metacritic_score: 0,
-      min_imdb_rating: 0,
-      min_rt_score: 0
-    })
-
+  ListBuilder.prototype.filter = function (opts = {}) {
     return Promise
       .resolve(getMovies())
       .then(filterByValue('metacritic_score', opts.min_metacritic_score))

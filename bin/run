@@ -4,7 +4,7 @@ var moment = require('moment')
 var Index = require('../index')
 var s3 = require('../lib/s3')
 
-var build = function (listBuilder, filename, opts) {
+var build = function (listBuilder, filename, opts = {}) {
   return Promise
     .bind({
       listBuilder: listBuilder,
