@@ -1,16 +1,9 @@
 /* eslint-env mocha */
 const Promise = require('bluebird')
 const expect = require('must')
-const eyes = require('eyes')
 const Index = require('../index')
 const imdb = require('../lib/imdb')
 const metacritic = require('../lib/metacritic')
-
-const inspect = eyes.inspector({
-  pretty: true,
-  hideFunctions: true,
-  maxLength: 0
-})
 
 describe('all', function () {
   it('should get a list of movies from metacritic', async function () {
@@ -54,5 +47,5 @@ describe('all', function () {
         expect(movies[0].imdb_id).to.be.string()
         expect(movies[0].poster_url).to.be.string()
       })
-  })
+  }).timeout(20000)
 })
