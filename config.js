@@ -2,7 +2,7 @@ const _ = require('lodash')
 const dotenv = require('dotenv')
 
 // load dotenv config vars if available
-dotenv.load()
+dotenv.config()
 
 const config = {
   DEBUG: false,

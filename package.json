@@ -23,18 +23,17 @@
     "eslint": "^8.30.0",
     "eslint-config-standard": "^17.0.0",
     "eyes": "^0.1.8",
-    "json2csv": "^4.5.4",
-    "mocha": "^5.2.0",
+    "json2csv": "^5.0.7",
+    "mocha": "^10.2.0",
     "must": "^0.13.4"
   },
   "dependencies": {
-    "aws-sdk": "^2.814.0",
+    "aws-sdk": "^2.1282.0",
     "bluebird": "^3.7.2",
     "cheerio": "^0.22.0",
-    "dotenv": "^6.1.0",
+    "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "request": "^2.88.2",
-    "winston": "^2.4.4"
+    "request": "^2.88.2"
   }
 }

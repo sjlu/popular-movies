@@ -9,7 +9,7 @@ Promise
     listBuilder: new Index()
   })
   .then(function () {
-    return this.listBuilder.dump()
+    return this.listBuilder.filter()
   })
   .then(function (data) {
     return json2csv(data)
@@ -21,6 +21,6 @@ Promise
     process.exit(0)
   })
   .catch(function (err) {
-    winston.error(err)
+    console.error(err)
     process.exit(1)
   })

@@ -4,6 +4,7 @@ const expect = require('must')
 const eyes = require('eyes')
 const Index = require('../index')
 const imdb = require('../lib/imdb')
+const metacritic = require('../lib/metacritic')
 
 const inspect = eyes.inspector({
   pretty: true,
@@ -12,6 +13,13 @@ const inspect = eyes.inspector({
 })
 
 describe('all', function () {
+  it('should get a list of movies from metacritic', async function () {
+    const movies = await metacritic()
+    expect(movies.length).gt(0)
+    expect(movies[0].title).to.be.string()
+    expect(movies[0].score).to.be.number()
+  })
+
   it('should get an IMDB rating', function () {
     return Promise
       .bind({
@@ -21,7 +29,6 @@ describe('all', function () {
         return imdb(this.imdb_id)
       })
       .then(function (results) {
-        inspect(results)
         expect(results.imdb_rating).gt(1)
         expect(results.imdb_votes).gt(10000)
       })
@@ -36,13 +43,16 @@ describe('all', function () {
         return this.listBuilder.filter()
       })
       .then(function (movies) {
-        inspect(movies)
         expect(movies.length).gt(0)
         expect(movies[0]).must.have.keys([
           'title',
           'imdb_id',
           'poster_url'
         ])
+
+        expect(movies[0].title).to.be.string()
+        expect(movies[0].imdb_id).to.be.string()
+        expect(movies[0].poster_url).to.be.string()
       })
   })
 })
