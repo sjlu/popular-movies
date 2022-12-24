@@ -30,7 +30,7 @@
   "dependencies": {
     "aws-sdk": "^2.1282.0",
     "bluebird": "^3.7.2",
-    "cheerio": "^0.22.0",
+    "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
