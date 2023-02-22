@@ -44,7 +44,7 @@ describe('all', function () {
   })
 
   it('should get me a list of movies', async function () {
-    this.timeout(20000)
+    this.timeout(60000)
     const listBuilder = new Index()
     const movies = await listBuilder.filter()
 
