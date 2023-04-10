@@ -28,7 +28,7 @@
     "must": "^0.13.4"
   },
   "dependencies": {
-    "aws-sdk": "^2.1282.0",
+    "aws-sdk": "^2.1354.0",
     "bluebird": "^3.7.2",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.0.3",
