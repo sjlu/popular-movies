@@ -52,6 +52,7 @@ describe('all', function () {
     expect(movies[0]).must.have.keys([
       'title',
       'imdb_id',
+      'tmdb_id',
       'poster_url'
     ])
     expect(movies[0].title).to.be.string()

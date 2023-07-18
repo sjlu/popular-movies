@@ -36,6 +36,7 @@ const associateImdbIds = function (movies) {
       return getImdbId(movie.id)
         .then(function ({ imdbId }) {
           movie.imdb_id = imdbId
+          movie.tmdb_id = movie.id
           return movie
         })
     })
@@ -77,7 +78,7 @@ const sanatizeForResponse = function (movies) {
   return Promise
     .resolve(movies)
     .map(function (movie) {
-      return _.pick(movie, ['title', 'imdb_id', 'poster_url'])
+      return _.pick(movie, ['title', 'tmdb_id', 'imdb_id', 'poster_url'])
     })
 }
 
@@ -108,6 +109,7 @@ const logger = function (movies) {
   console.table(movies, [
     'id',
     'imdb_id',
+    'tmdb_id',
     'title',
     'release_date',
     'age',
