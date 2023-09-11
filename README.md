@@ -13,10 +13,12 @@ Popular movies are based on some general rules:
 
 ## Usage
 
+> :warning: **The URL has changed from `https://s3.amazonaws.com/popular-movies/` to `https://popular-movies-data.stevenlu.com/` as of September 11, 2023.** Access via AWS S3 will be removed on January 1, 2025.
+
 You can poll the following JSON file for a list of movies.
 
 ```
-https://s3.amazonaws.com/popular-movies/movies.json
+https://popular-movies-data.stevenlu.com/popular-movies/movies.json
 ```
 
   * This file is regenerated nightly so it is recommended that you
@@ -29,24 +31,24 @@ There are also several other variations of the main file:
 
 | File | Description |
 | -- | -- |
-| [movies-metacritic-min50.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min50.json) | Movies with a minimum score of 50 on Metacritic |
-| [movies-metacritic-min60.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min60.json) | Movies with a minimum score of 60 on Metacritic |
-| [movies-metacritic-min70.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min70.json) | Movies with a minimum score of 70 on Metacritic |
-| [movies-metacritic-min80.json](https://s3.amazonaws.com/popular-movies/movies-metacritic-min80.json) | Movies with a minimum score of 80 on Metacritic |
-| [movies-imdb-min5.json](https://s3.amazonaws.com/popular-movies/movies-imdb-min5.json) | Movies with a minimum score of 5 on IMDB |
-| [movies-imdb-min6.json](https://s3.amazonaws.com/popular-movies/movies-imdb-min6.json) | Movies with a minimum score of 6 on IMDB |
-| [movies-imdb-min7.json](https://s3.amazonaws.com/popular-movies/movies-imdb-min7.json) | Movies with a minimum score of 7 on IMDB |
-| [movies-imdb-min8.json](https://s3.amazonaws.com/popular-movies/movies-imdb-min8.json) | Movies with a minimum score of 8 on IMDB |
-| [movies-rottentomatoes-min50.json](https://s3.amazonaws.com/popular-movies/movies-rottentomatoes-min50.json) | Movies with a minimum score of 50 on Rotten Tomatoes |
-| [movies-rottentomatoes-min60.json](https://s3.amazonaws.com/popular-movies/movies-rottentomatoes-min60.json) | Movies with a minimum score of 60 on Rotten Tomatoes |
-| [movies-rottentomatoes-min70.json](https://s3.amazonaws.com/popular-movies/movies-rottentomatoes-min70.json) | Movies with a minimum score of 70 on Rotten Tomatoes |
-| [movies-rottentomatoes-min80.json](https://s3.amazonaws.com/popular-movies/movies-rottentomatoes-min80.json) | Movies with a minimum score of 80 on Rotten Tomatoes |
+| [movies-metacritic-min50.json](https://popular-movies-data.stevenlu.com/movies-metacritic-min50.json) | Movies with a minimum score of 50 on Metacritic |
+| [movies-metacritic-min60.json](https://popular-movies-data.stevenlu.com/movies-metacritic-min60.json) | Movies with a minimum score of 60 on Metacritic |
+| [movies-metacritic-min70.json](https://popular-movies-data.stevenlu.com/movies-metacritic-min70.json) | Movies with a minimum score of 70 on Metacritic |
+| [movies-metacritic-min80.json](https://popular-movies-data.stevenlu.com/movies-metacritic-min80.json) | Movies with a minimum score of 80 on Metacritic |
+| [movies-imdb-min5.json](https://popular-movies-data.stevenlu.com/movies-imdb-min5.json) | Movies with a minimum score of 5 on IMDB |
+| [movies-imdb-min6.json](https://popular-movies-data.stevenlu.com/movies-imdb-min6.json) | Movies with a minimum score of 6 on IMDB |
+| [movies-imdb-min7.json](https://popular-movies-data.stevenlu.com/movies-imdb-min7.json) | Movies with a minimum score of 7 on IMDB |
+| [movies-imdb-min8.json](https://popular-movies-data.stevenlu.com/movies-imdb-min8.json) | Movies with a minimum score of 8 on IMDB |
+| [movies-rottentomatoes-min50.json](https://popular-movies-data.stevenlu.com/movies-rottentomatoes-min50.json) | Movies with a minimum score of 50 on Rotten Tomatoes |
+| [movies-rottentomatoes-min60.json](https://popular-movies-data.stevenlu.com/movies-rottentomatoes-min60.json) | Movies with a minimum score of 60 on Rotten Tomatoes |
+| [movies-rottentomatoes-min70.json](https://popular-movies-data.stevenlu.com/movies-rottentomatoes-min70.json) | Movies with a minimum score of 70 on Rotten Tomatoes |
+| [movies-rottentomatoes-min80.json](https://popular-movies-data.stevenlu.com/movies-rottentomatoes-min80.json) | Movies with a minimum score of 80 on Rotten Tomatoes |
 
 If you're looking for historical files, you can amend a date to the
 main file like so:
 
 ```
-https://s3.amazonaws.com/popular-movies/movies-20191202.json
+https://popular-movies-data.stevenlu.com/movies-20191202.json
 ```
 
 _This file is only available from December 2, 2019 onwards._
