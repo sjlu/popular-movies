@@ -30,7 +30,6 @@ const build = function (listBuilder, filename, opts = {}) {
         s3.upload(this.filename, jsonMovies),
         r2.upload(this.filename, jsonMovies)
       ])
-      return
     })
 }
 

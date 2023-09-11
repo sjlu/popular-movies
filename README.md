@@ -18,7 +18,7 @@ Popular movies are based on some general rules:
 You can poll the following JSON file for a list of movies.
 
 ```
-https://popular-movies-data.stevenlu.com/popular-movies/movies.json
+https://popular-movies-data.stevenlu.com/movies.json
 ```
 
   * This file is regenerated nightly so it is recommended that you
