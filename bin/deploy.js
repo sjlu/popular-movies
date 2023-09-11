@@ -3,6 +3,7 @@ const Promise = require('bluebird')
 const moment = require('moment')
 const Index = require('../index')
 const s3 = require('../lib/s3')
+const r2 = require('../lib/r2')
 const json2csv = require('../lib/json2csv')
 const fs = Promise.promisifyAll(require('fs'))
 
@@ -23,7 +24,13 @@ const build = function (listBuilder, filename, opts = {}) {
         count: movies.length
       })
 
-      return s3.upload(this.filename, JSON.stringify(movies))
+      const jsonMovies = JSON.stringify(movies)
+
+      return Promise.all([
+        s3.upload(this.filename, jsonMovies),
+        r2.upload(this.filename, jsonMovies)
+      ])
+      return
     })
 }
 

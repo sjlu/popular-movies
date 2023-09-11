@@ -13,7 +13,11 @@ const config = {
   AWS_BUCKET: 'popular-movies',
   AWS_KEY: '',
   AWS_SECRET: '',
-  OMDB_KEY: ''
+  OMDB_KEY: '',
+  CLOUDFLARE_ACCOUNT_ID: '',
+  CLOUDFLARE_ACCESS_KEY_ID: '',
+  CLOUDFLARE_SECRET_ACCESS_KEY: '',
+  CLOUDFLARE_BUCKET: ''
 }
 
 module.exports = _.pick(_.assign({}, config, process.env), _.keys(config))
