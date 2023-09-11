@@ -55,7 +55,7 @@
   <script type="text/javascript">
     $(document).ready(function() {
       var posterTemplate = Handlebars.compile($('#poster-template').html());
-      var movies = $.get('https://s3.amazonaws.com/popular-movies/movies.json', function(data) {
+      var movies = $.get('https://popular-movies-data.stevenlu.com/movies.json', function(data) {
         var currentRow, i;
         for (i = 0; i < data.length; i++) {
           var movie = data[i];
