@@ -13,7 +13,9 @@ Popular movies are based on some general rules:
 
 ## Usage
 
-> :warning: **The URL has changed from `https://s3.amazonaws.com/popular-movies/` to `https://popular-movies-data.stevenlu.com/` as of September 11, 2023.** Access via AWS S3 will be removed on January 1, 2025.
+> :warning: **The URL has changed from `https://s3.amazonaws.com/popular-movies/` to `https://popular-movies-data.stevenlu.com/` as of September 11, 2023.**
+> Access via S3 using TLS 1.0 or 1.1 will be [deprecated by AWS](https://aws.amazon.com/blogs/security/tls-1-2-required-for-aws-endpoints/) on December 31, 2023.
+> Access via S3 will be completely deprecated January 1, 2025.
 
 You can poll the following JSON file for a list of movies.
 
