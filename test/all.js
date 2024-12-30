@@ -54,10 +54,12 @@ describe('all', function () {
       'title',
       'imdb_id',
       'tmdb_id',
-      'poster_url'
+      'poster_url',
+      'genres'
     ])
     expect(movies[0].title).to.be.string()
     expect(movies[0].imdb_id).to.be.string()
     expect(movies[0].poster_url).to.be.string()
+    expect(movies[0].genres).to.be.array()
   })
 })
