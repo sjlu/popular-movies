@@ -1,15 +1,8 @@
 # popular-movies
 
-This tool makes a best guess at what popular movies are based on a
-series of heuristics from multiple websites. This then returns a
-list of movies with their posters and IMDB ID.
-
-Popular movies are based on some general rules:
-
-* Rating greater than the general sentiment of movies currently out
-* Released less than a year ago
-* At least 3 weeks old to generate a "stable" rating
-* Does not consider tastes, categories or genres of movies
+Popular Movies uses LLMs to evaluate the popularity of movies that are released
+and are less than 4 months old. Popular Movies considers a multitude of data points
+such as ratings, popularity, production companies, actors, and more.
 
 ## Usage
 
@@ -29,7 +22,25 @@ https://popular-movies-data.stevenlu.com/movies.json
     remove based on the list no longer displaying a particular movie
   * Subject to fair use; excessive usage will be rate limited
 
-There are also several other variations of the main file:
+If you're looking for historical files, you can amend a date to the
+main file like so:
+
+```
+https://popular-movies-data.stevenlu.com/movies-20191202.json
+```
+
+_This file is only available from December 2, 2019 onwards._
+
+## All Movies
+
+There is also a file that includes all movies. This file is not filtered or evaluated.
+
+```
+https://popular-movies-data.stevenlu.com/all-movies.json
+```
+
+There are also several variations of this file that are filtered by different
+rating websites.
 
 | File | Description |
 | -- | -- |
@@ -46,14 +57,6 @@ There are also several other variations of the main file:
 | [movies-rottentomatoes-min70.json](https://popular-movies-data.stevenlu.com/movies-rottentomatoes-min70.json) | Movies with a minimum score of 70 on Rotten Tomatoes |
 | [movies-rottentomatoes-min80.json](https://popular-movies-data.stevenlu.com/movies-rottentomatoes-min80.json) | Movies with a minimum score of 80 on Rotten Tomatoes |
 
-If you're looking for historical files, you can amend a date to the
-main file like so:
-
-```
-https://popular-movies-data.stevenlu.com/movies-20191202.json
-```
-
-_This file is only available from December 2, 2019 onwards._
 
 ## Develop
 
