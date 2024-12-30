@@ -24,10 +24,11 @@
     "eslint": "^8.30.0",
     "eslint-config-standard": "^17.0.0",
     "json2csv": "^5.0.7",
-    "mocha": "^10.2.0",
+    "mocha": "^11.0.1",
     "must": "^0.13.4"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.33.1",
     "aws-sdk": "^2.1282.0",
     "bluebird": "^3.7.2",
     "cheerio": "^1.0.0-rc.12",

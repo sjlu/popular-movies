@@ -1,3 +1,9 @@
+## 2024-12-30
+
+* MAJOR: Using Anthropic Claude 3.5 Sonnet for evaluation on main recommendation file. The original file is now `all-movies.json`.
+* Swapped out Metacritic in favor of TMDB for the main source of movies.
+* Fixed an issue where Metacritic ratings were not being pulled correctly from OMDB.
+
 ## 2023-09-11
 
 * Moving to Cloudflare R2 for hosting.

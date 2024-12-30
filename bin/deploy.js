@@ -15,6 +15,10 @@ const build = function (listBuilder, filename, opts = {}) {
       opts
     })
     .then(function () {
+      if (this.opts.evaluate === true) {
+        return this.listBuilder.evaluate()
+      }
+
       return this.listBuilder.filter(this.opts)
     })
     .then(function (movies) {
@@ -40,10 +44,15 @@ Promise
   .then(function () {
     return [
       {
-        filename: 'movies.json'
+        filename: 'movies.json',
+        evaluate: true
       },
       {
-        filename: `movies-${moment().format('YYYYMMDD')}.json`
+        filename: `movies-${moment().format('YYYYMMDD')}.json`,
+        evaluate: true
+      },
+      {
+        filename: 'all-movies.json'
       },
       {
         filename: 'movies-metacritic-min50.json',
