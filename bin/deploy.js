@@ -7,15 +7,16 @@ const r2 = require('../lib/r2')
 const json2csv = require('../lib/json2csv')
 const fs = Promise.promisifyAll(require('fs'))
 
-const build = function (listBuilder, filename, opts = {}) {
+const build = function (listBuilder, filename, opts = {}, evaluate = false) {
   return Promise
     .bind({
       listBuilder,
       filename,
-      opts
+      opts,
+      evaluate
     })
     .then(function () {
-      if (this.opts.evaluate === true) {
+      if (this.evaluate) {
         return this.listBuilder.evaluate()
       }
 
@@ -25,6 +26,7 @@ const build = function (listBuilder, filename, opts = {}) {
       console.log({
         filename: this.filename,
         opts: this.opts,
+        evaluate: this.evaluate,
         count: movies.length
       })
 
@@ -129,7 +131,7 @@ Promise
     ]
   })
   .mapSeries(function (manifest) {
-    return build(this.listBuilder, manifest.filename, manifest.opts)
+    return build(this.listBuilder, manifest.filename, manifest.opts, manifest.evaluate)
   })
   .then(function () {
     return this.listBuilder.dump()
