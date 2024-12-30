@@ -6,12 +6,9 @@ const omdb = require('./lib/omdb')
 const imdb = require('./lib/imdb')
 const metacritic = require('./lib/metacritic')
 const anthropic = require('./lib/anthropic')
-const fsCache = require('./lib/fs_cache')
 
 const getTmdb = function (tmdbId) {
-  return fsCache.wrap(tmdbId, function () {
-    return tmdb.getMovie(tmdbId)
-  })
+  return tmdb.getMovie(tmdbId)
 }
 
 const getTmdbDetails = function (movies) {
@@ -191,6 +188,10 @@ const filterByMaxValue = function (key, value = 0) {
 
 const rejectArrayValues = function (key, values) {
   return function (movies) {
+    if (_.isNil(values)) {
+      return movies
+    }
+
     return _.reject(movies, function (movie) {
       return values.some(value => _.get(movie, key, []).includes(value))
     })
