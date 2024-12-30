@@ -107,7 +107,7 @@ You will be given a list of movies with the following details:
 - Director
 - Writer
 
-When considering the popularity of a movie, consider the following:
+When evaluating the popularity of a movie, consider:
 
 - The budget of the movie and and how much revenue it made. Don't consider ROI, just consider how large the spend or revenue is.
 - The number of votes the movie received and the rating of the movie.
@@ -116,7 +116,7 @@ When considering the popularity of a movie, consider the following:
 
 A null value means that the data could not be found or isn't publicly available.
 
-Return the IDs of the most popular movies, in sorted order, in a JSON array, without comments.
+Explain your reasoning, then return the IDs of the most popular movies, in sorted order, in a JSON array.
 
 Include, at most, 15 movies.
 
