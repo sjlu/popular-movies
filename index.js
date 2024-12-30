@@ -165,7 +165,8 @@ const sanatizeForResponse = function (movies) {
         'title',
         'tmdb_id',
         'imdb_id',
-        'poster_url'
+        'poster_url',
+        'genres'
       ])
     })
 }
