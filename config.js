@@ -17,7 +17,8 @@ const config = {
   CLOUDFLARE_ACCOUNT_ID: '',
   CLOUDFLARE_ACCESS_KEY_ID: '',
   CLOUDFLARE_SECRET_ACCESS_KEY: '',
-  CLOUDFLARE_BUCKET: ''
+  CLOUDFLARE_BUCKET: '',
+  ANTHROPIC_API_KEY: ''
 }
 
 module.exports = _.pick(_.assign({}, config, process.env), _.keys(config))

@@ -23,10 +23,10 @@ jobs:
           key: static-cache-${{ env.DATE }}
           restore-keys: |
             static-cache-
-      - name: Install Node.js 16.x
+      - name: Install Node.js 20.x
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '20.x'
           cache: 'npm'
       - run: npm install
       - name: test

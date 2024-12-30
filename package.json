@@ -28,6 +28,7 @@
     "must": "^0.13.4"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.33.1",
     "aws-sdk": "^2.1282.0",
     "bluebird": "^3.7.2",
     "cheerio": "^1.0.0-rc.12",
