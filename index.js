@@ -31,7 +31,6 @@ const getTmdbDetails = function (movies) {
             genres: _.chain(tmdbMovie.genres)
               .map('name')
               .map(name => _.snakeCase(name).toLowerCase())
-              .join(', ')
               .value()
           })
         })
