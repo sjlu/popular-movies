@@ -109,13 +109,13 @@ You will be given a list of movies with the following details:
 When evaluating the popularity of a movie, consider:
 
 - The budget of the movie and and how much revenue it made. Don't consider ROI, just consider how large the spend or revenue is.
-- The number of votes the movie received and the rating of the movie.
+- The number of votes the movie received and the rating of the movie. Be sure to consider the number of votes so that one vote does not skew the results.
 - The production companies of the movie and the quality of the movies they have produced, and how well known the companies are.
 - The actors & directors in the movie and how well known they are.
 
 A null value means that the data could not be found or isn't publicly available.
 
-Explain your reasoning, then return the IDs of the most popular movies, in sorted order, in a JSON array.
+Explain your reasoning first, then return the IDs of the most popular movies, in sorted order, in a JSON array. Comments in the JSON is invalid JSON.
 
 Include, at most, 15 movies.
 
