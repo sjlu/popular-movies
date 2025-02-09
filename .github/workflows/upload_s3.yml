@@ -46,8 +46,8 @@ jobs:
           CLOUDFLARE_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_SECRET_ACCESS_KEY }}
           CLOUDFLARE_BUCKET: ${{ secrets.CLOUDFLARE_BUCKET }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      - name: Store
-        uses: actions/upload-artifact@v3
-        with:
-          name: dump
-          path: dump.csv
+      # - name: Store
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: dump
+      #     path: dump.csv
