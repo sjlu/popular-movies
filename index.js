@@ -45,7 +45,8 @@ const getImdbRatings = function (movies) {
         return movie
       }
 
-      return imdb(movie.imdb_id)
+      return Promise
+        .resolve(imdb(movie.imdb_id))
         .then(function (ratings) {
           return _.assign(movie, ratings)
         })
