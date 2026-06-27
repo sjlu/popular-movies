@@ -1,0 +1,121 @@
+/* ── Design tokens ──────────────────────────────────────
+   All colours and layout constants as CSS custom properties.
+   Tailwind's arbitrary-value syntax [var(--x)] references these.
+   ───────────────────────────────────────────────────── */
+:root {
+  --accent: #3b82f6;
+  --bg:     #ffffff;
+  --fg:     #0a0a0a;
+  --muted:  #6b7280;
+  --card:   #ffffff;
+  --line:   #e7e7e7;
+  --radius: 10px;
+  --cols:   4;
+}
+
+/* Dark mode — swaps every token, no Tailwind dark: prefix needed */
+html.dark {
+  --bg:    #0b0b0c;
+  --fg:    #f4f4f5;
+  --muted: #8a8a92;
+  --card:  #141416;
+  --line:  #26262a;
+}
+
+
+/* ── Poster grid ────────────────────────────────────────
+   Column count is a CSS variable so JS can clamp it at runtime.
+   Tailwind can't express repeat(var(--cols), …) directly.
+   ───────────────────────────────────────────────────── */
+.grid-movies {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1024px) { :root { --cols: 4; } }
+@media (max-width:  768px) { :root { --cols: 3; } }
+@media (max-width:  480px) { :root { --cols: 2; } } /* xs breakpoint */
+
+
+/* ── Poster card hover ──────────────────────────────────
+   Perspective tilt can't be expressed with Tailwind utilities.
+   ───────────────────────────────────────────────────── */
+.poster {
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease;
+}
+.poster:hover {
+  transform: perspective(800px) rotateX(6deg) translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.22);
+}
+.poster img {
+  transition: transform .45s cubic-bezier(.2,.7,.2,1);
+}
+
+
+/* ── Title overlay ──────────────────────────────────────
+   Gradient-to-top + opacity toggle on parent hover.
+   ───────────────────────────────────────────────────── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0,0,0,.78), transparent 55%);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.poster:hover .overlay { opacity: 1; }
+
+
+/* ── Striped placeholder ────────────────────────────────
+   Shown when a movie has no poster URL.
+   ───────────────────────────────────────────────────── */
+.stripe {
+  background-image: repeating-linear-gradient(
+    45deg, var(--line) 0 8px, transparent 8px 16px
+  );
+}
+
+
+/* ── Card entrance animation ────────────────────────────
+   Cards stagger in on first render and on tab return.
+   ───────────────────────────────────────────────────── */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+.anim { animation: cardIn .5s cubic-bezier(.2,.7,.2,1) both; }
+
+
+/* ── Range input ────────────────────────────────────────
+   Browser defaults are inconsistent; Tailwind has no thumb utilities.
+   ───────────────────────────────────────────────────── */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 99px;
+  /* fill gradient is set inline by JS to reflect current value */
+  background: var(--line);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  cursor: pointer;
+}
